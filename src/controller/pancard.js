@@ -6,9 +6,7 @@ exports.createpan = async (req, res) => {
   try {
     const { pan } = req.body;
 
-    const newBeneficiary = new pann({
-      pan,
-    });
+    const newBeneficiary = new pann({ pan });
     const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG";
     const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84";
     const headers = {
@@ -17,7 +15,7 @@ exports.createpan = async (req, res) => {
       "X-Client-ID": clientId,
       "X-Client-Secret": clientSecret,
     }
-    console.log(headers);
+    console.log(newBeneficiary);
     const response = await axios.post(
       "https://api.cashfree.com/verification/pan",
       newBeneficiary,
@@ -25,9 +23,9 @@ exports.createpan = async (req, res) => {
         headers: headers,
       }
     );
-    console.log(response);
+    console.log("-------------------------------------------------------", response);
     const createdBeneficiary = response.data;
-    // console.log(createdBeneficiary)
+    console.log(createdBeneficiary)
     newBeneficiary.ref_id = response.data.ref_id;
     newBeneficiary.save();
     res.status(201).json(createdBeneficiary);

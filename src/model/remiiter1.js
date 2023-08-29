@@ -18,7 +18,13 @@ const remitter1Schema = mongoose.Schema({
   pan: {
     type: String,
   },
-  name: {
+  firstName: {
+    type: String,
+  },
+  middleName: {
+    type: String,
+  },
+  lastName: {
     type: String,
   },
   address: {
@@ -49,11 +55,11 @@ const remitter1Schema = mongoose.Schema({
   bank_code: {
     type: String,
   },
-  userid:{
-    type:objectId,
-    ref:"remitter"
+  userid: {
+    type: objectId,
+    ref: "remitter"
   }
- 
+
 });
 
 const remitterModel = mongoose.model("remitter1", remitter1Schema);

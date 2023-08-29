@@ -13,8 +13,7 @@ exports.convertCurrencyccc = async (req, res) => {
     const response = await axios.get(
       //`https://api.exchangerate-api.com/v4/latest/${fromCurrency}`,
       /* 'https://v6.exchangerate-api.com/v6/12d331a841b6fcb37fc60cc5/latest/${fromCurrency}'*/
-      `https://api.cashfree.com/lrs/webhooks/${
-        (payment_url, refund_url, order_url)
+      `https://api.cashfree.com/lrs/webhooks/${(payment_url, refund_url, order_url)
       }`
     );
     console.log(response.payment_url);
@@ -42,7 +41,9 @@ exports.createRemitter = async (req, res) => {
       account_number,
       ifsc,
       pan,
-      name,
+      firstName,
+      middleName,
+      lastName,
       address,
       city,
       state,
@@ -61,7 +62,9 @@ exports.createRemitter = async (req, res) => {
       account_number,
       ifsc,
       pan,
-      name,
+      firstName,
+      middleName,
+      lastName,
       address,
       city,
       state,
@@ -97,7 +100,7 @@ exports.createRemitter = async (req, res) => {
     // console.log(response);
     const createdBeneficiary = response.data;
     console.log(createdBeneficiary);
-   let dataSave= await newBeneficiary.save();
+    let dataSave = await newBeneficiary.save();
     res.status(201).json(dataSave);
   } catch (error) {
     console.log(error);
