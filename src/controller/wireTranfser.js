@@ -32,17 +32,11 @@ exports.wireTransfer = async (req, res) => {
       transferFromCity: cityfrom.selectcity,
       transferTo: data.transferTo,
       transferToCity: cityTo.selectcity,
-      // purpose: data.purpose,
-      // purposeName: purposes.purpose,
       purpose: purposes._id,
       purposeName: purposes.purpose,
       descPurpose: purposes.desc,
-      // receivingCurrency: req.body.receivingCurrency,
-      // recievingCurrencyName: currencyData.addcurrency,
       receivingCurrency: currencyData._id,
       recievingCurrencyName: currencyData.addcurrency,
-      // INRCurrency: req.body.INRCurrency,
-      // INRCurrencyName: currencyINR.addcurrency,
       INRCurrency: currencyINR._id,
       INRCurrencyName: currencyINR.addcurrency,
       recievingAmount: data.recievingAmount,
@@ -53,7 +47,7 @@ exports.wireTransfer = async (req, res) => {
     return res.status(201).json(result)
   } catch (error) {
     console.log(error)
-    res.status(500).json({ error: error.message })
+    return res.status(500).json({ error: error.message })
   }
 }
 
@@ -61,42 +55,29 @@ exports.wireTransfer = async (req, res) => {
 exports.updatepan = async (req, res) => {
   try {
     const { pan } = req.body;
-
-    const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG";
-    const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84";
+    const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
+    const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
     const headers = {
       "x-api-version": "2023-03-01",
       "Content-Type": "application/json",
       "X-Client-ID": clientId,
       "X-Client-Secret": clientSecret,
-    };
-
+    }
     const response = await axios.post(
-      "https://api.cashfree.com/verification/pan",
+      // "https://api.cashfree.com/verification/pan",
+      "https://sandbox.cashfree.com/verification/pan",
       { pan },
       {
         headers: headers,
       }
     );
-
     const createdBeneficiary = response.data;
     console.log(createdBeneficiary);
-    const updatedCurrencyConverter = await wireTransferModel.findByIdAndUpdate(
-      { _id: req.params.id },
-      {
-        $set: {
-          pancard: pan,
-          Name: response.data.registered_name,
-          panStatus: response.data.pan_status,
-        },
-      },
-      { new: true }
-    );
-
-    res.status(201).json(updatedCurrencyConverter);
+    const updatedCurrencyConverter = await wireTransferModel.findByIdAndUpdate({ _id: req.params.id }, { $set: { pancard: pan, Name: response.data.registered_name, panStatus: response.data.pan_status, }, }, { new: true });
+    return res.status(201).json(updatedCurrencyConverter);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -134,10 +115,10 @@ exports.addharotpWire = async (req, res) => {
       { new: true }
     );
 
-    res.status(201).json(updatedCurrencyConverter);
+    return res.status(201).json(updatedCurrencyConverter);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -175,10 +156,10 @@ exports.verifyotpWire = async (req, res) => {
       { new: true }
     );
 
-    res.status(201).json(updatedCurrencyConverter);
+    return res.status(201).json(updatedCurrencyConverter);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -222,10 +203,10 @@ exports.updateRemitter = async (req, res) => {
       { new: true }
     );
 
-    res.status(201).json(updatedCurrencyConverter);
+    return res.status(201).json(updatedCurrencyConverter);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -281,10 +262,10 @@ exports.updateBeneficiary = async (req, res) => {
       { new: true }
     );
 
-    res.status(201).json(updatedCurrencyConverter);
+    return res.status(201).json(updatedCurrencyConverter);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -384,10 +365,10 @@ exports.updatebifurcation = async (req, res) => {
       { new: true }
     );
 
-    res.status(201).json(updatedCurrencyConverter);
+    return res.status(201).json(updatedCurrencyConverter);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 }
 
@@ -417,9 +398,9 @@ exports.updateDocument = async (req, res) => {
       { new: true }
     );
 
-    res.status(201).json(updatedCurrencyConverter);
+    return res.status(201).json(updatedCurrencyConverter);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 }
