@@ -18,7 +18,7 @@ exports.wireTransfer = async (req, res) => {
     }
     const cityfrom = await cityModel.findById({ _id: data.tranferFrom, });
     const cityTo = await cityModel.findById({ _id: data.transferTo, });
-    const currencyData = await currencyModel.findOne({ _id: data.recievingCurrencyName });
+    const currencyData = await currencyModel.findOne({ addcurrency: data.recievingCurrencyName });
     const currencyINR = await currencyModel.findOne({ _id: data.INRCurrencyName, });
     const purposes = await purposs.findOne({ purpose: data.purposeName, })
     const response = await axios.get(`https://api.currencyscoop.com/v1/convert?api_key=4b9a3c48ebe3250b32d97a7031359674&from=${currencyData.addcurrency}&to=INR&amount=${data.recievingAmount}`)
