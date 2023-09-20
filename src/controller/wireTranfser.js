@@ -11,56 +11,17 @@ exports.wireTransfer = async (req, res) => {
     data = {
       tranferFrom: req.body.tranferFrom,
       transferTo: req.body.transferTo,
-      // purpose: req.body.purpose,
-      purposeName :req.body.purposeName,
-      // receivingCurrency: req.body.receivingCurrency,
-      recievingCurrencyName:req.body.recievingCurrencyName,
-      // INRCurrency: req.body.INRCurrency,
-      INRCurrencyName:req.body.INRCurrencyName,
+      purposeName: req.body.purpose,
+      recievingCurrencyName: req.body.recievingCurrencyName,
+      INRCurrencyName: req.body.INRCurrencyName,
       recievingAmount: req.body.recievingAmount,
     }
-
-    const cityfrom = await cityModel.findById({
-      _id: data.tranferFrom,
-    });
-    console.log(cityfrom.selectcity);
-
-    const cityTo = await cityModel.findById({
-      _id: data.transferTo,
-    });
-    console.log(cityTo.selectcity)
-
-    // const currencyData = await currencyModel.findById({
-    //   _id: data.receivingCurrency,
-    // });
-    // console.log(currencyData.addcurrency)
-
-    // const currencyINR = await currencyModel.findById({
-    //   _id: data.INRCurrency,
-    // });
-    // console.log(currencyINR.addcurrency)
-
-
-    const currencyData = await currencyModel.findOne({
-      addcurrency: data.recievingCurrencyName,
-      });
-      console.log(currencyData._id)
-  
-      const currencyINR = await currencyModel.findOne({
-        addcurrency: data.INRCurrencyName,
-      });
-      console.log(currencyINR._id)
-
-
-    const purposes = await purposs.findOne({
-      purpose : data.purposeName,
-    })
-    console.log(purposes._id)
-
-    const response = await axios.get(
-      `https://api.currencyscoop.com/v1/convert?api_key=4b9a3c48ebe3250b32d97a7031359674&from=${data.recievingCurrencyName}&to=INR&amount=${data.recievingAmount}`
-    )
-
+    const cityfrom = await cityModel.findById({ _id: data.tranferFrom, });
+    const cityTo = await cityModel.findById({ _id: data.transferTo, });
+    const currencyData = await currencyModel.findOne({ _id: data.recievingCurrencyName });
+    const currencyINR = await currencyModel.findOne({ _id: data.INRCurrencyName, });
+    const purposes = await purposs.findOne({ _id: data.purposeName, })
+    const response = await axios.get(`https://api.currencyscoop.com/v1/convert?api_key=4b9a3c48ebe3250b32d97a7031359674&from=${currencyData.addcurrency}&to=INR&amount=${data.recievingAmount}`)
     console.log(response.data.value);
     const ConvertedAmount = response.data.value;
     const total = response.data.value
@@ -74,16 +35,16 @@ exports.wireTransfer = async (req, res) => {
       // purpose: data.purpose,
       // purposeName: purposes.purpose,
       purpose: purposes._id,
-      purposeName: data.purposeName,
-      descPurpose:purposes.desc,
+      purposeName: purposes.purpose,
+      descPurpose: purposes.desc,
       // receivingCurrency: req.body.receivingCurrency,
       // recievingCurrencyName: currencyData.addcurrency,
       receivingCurrency: currencyData._id,
-      recievingCurrencyName: data.recievingCurrencyName,
+      recievingCurrencyName: currencyData.addcurrency,
       // INRCurrency: req.body.INRCurrency,
       // INRCurrencyName: currencyINR.addcurrency,
       INRCurrency: currencyINR._id,
-      INRCurrencyName: data.INRCurrencyName,
+      INRCurrencyName: currencyINR.addcurrency,
       recievingAmount: data.recievingAmount,
       convertedAmount: ConvertedAmount,
     };
@@ -334,7 +295,7 @@ exports.updatebifurcation = async (req, res) => {
       transferAmountInFCY,
       remittenceServiceCharge,
       /* totalFundingInINR,*/
-    /*  purpose,*/
+      /*  purpose,*/
     } = req.body;
 
     const wiretravel = await wireTransferModel.findById({
@@ -343,14 +304,14 @@ exports.updatebifurcation = async (req, res) => {
     if (!wiretravel) {
       return res.status(404).send("wiretravel Card not found");
     }
-    
+
 
     const GstOnCharge = (remittenceServiceCharge * 0.18).toFixed(2);
-    
+
 
     const total = parseFloat(exchangeRate) * parseFloat(transferAmountInFCY);
 
-   
+
     let gstOnCurrencyConversion = "";
 
     if (total <= 25000) {
@@ -368,7 +329,7 @@ exports.updatebifurcation = async (req, res) => {
       ).toFixed(2);
     }
 
-   
+
     let tcs = "";
     let tcsFlag = "";
 
@@ -396,8 +357,8 @@ exports.updatebifurcation = async (req, res) => {
         tcs = ((5 / 100) * total).toFixed(2);
       }
     }
-    
-    
+
+
     const TotalOfAllCharges = (
       parseFloat(remittenceServiceCharge) +
       parseFloat(GstOnCharge) +
