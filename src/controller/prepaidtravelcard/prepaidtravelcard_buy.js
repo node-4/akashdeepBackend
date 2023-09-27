@@ -107,20 +107,21 @@ exports.updatePrepaidTravelById = async (req, res) => {
     req.body.PassportBack = passportB[0].path;
     req.body.airTicket = airtic[0].path;
     req.body.validVisa = Valid[0].path;
-
     const pan = req.body.panCard;
-
-    const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG";
-    const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84";
+    // const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG";
+    // const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84";
+    const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
+    const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
     const headers = {
       "x-api-version": "2023-03-01",
       "Content-Type": "application/json",
       "X-Client-ID": clientId,
       "X-Client-Secret": clientSecret,
-    };
-
+    }
+    // const apiUrl = "https://api.cashfree.com/verification/pan";
+    const apiUrl = 'https://sandbox.cashfree.com/verification/pan';
     const response = await axios.post(
-      "https://api.cashfree.com/verification/pan",
+      apiUrl,
       { pan },
       {
         headers: headers,
@@ -173,12 +174,12 @@ exports.updatePrepaidAccountDetails = async (req, res) => {
 
     let exchangeRate =
       prepaidtravel.ConvertedAmountToINR / prepaidtravel.forexAmount;
-   
+
     const GstOnCharge = (parseFloat(data.RemittanceServiceCharge) * 0.18).toFixed(2);
-   
+
     const total =
       parseFloat(exchangeRate) * parseFloat(prepaidtravel.forexAmount);
-     
+
     let gstOnCurrencyConversion = "";
 
     if (total <= 25000) {
@@ -195,7 +196,7 @@ exports.updatePrepaidAccountDetails = async (req, res) => {
         (0.018 / 100) * (total - 1000000)
       ).toFixed(2);
     }
-   
+
     let tcs = "";
     let tcsFlag = "";
 
@@ -223,7 +224,7 @@ exports.updatePrepaidAccountDetails = async (req, res) => {
         tcs = ((5 / 100) * total).toFixed(2);
       }
     }
-    
+
 
     const TotalOfAllCharges = (
       parseFloat(data.RemittanceServiceCharge) +
@@ -232,7 +233,7 @@ exports.updatePrepaidAccountDetails = async (req, res) => {
       (tcsFlag ? parseFloat(tcsFlag) : parseFloat(tcs))
     ).toFixed(2)
 
- 
+
     const updatedCurrencyConverter = await prepaidtravelModel.findByIdAndUpdate(
       { _id: prepaidtravel._id },
       {

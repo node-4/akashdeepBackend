@@ -15,8 +15,8 @@ exports.createpan = async (req, res) => {
       "X-Client-ID": clientId,
       "X-Client-Secret": clientSecret,
     }
-    const apiUrl = "https://api.cashfree.com/verification/pan";
-    // const apiUrl = 'https://sandbox.cashfree.com/verification/pan';
+    // const apiUrl = "https://api.cashfree.com/verification/pan";
+    const apiUrl = 'https://sandbox.cashfree.com/verification/pan';
     axios.post(apiUrl, newBeneficiary, { headers })
       .then(async (response) => {
         console.log("-----------------------", response.data);

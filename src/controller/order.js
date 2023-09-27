@@ -14,8 +14,7 @@ exports.convertCurrencyccc = async (req, res) => {
     const response = await axios.get(
       //`https://api.exchangerate-api.com/v4/latest/${fromCurrency}`,
       /* 'https://v6.exchangerate-api.com/v6/12d331a841b6fcb37fc60cc5/latest/${fromCurrency}'*/
-      `https://api.cashfree.com/lrs/webhooks/${
-        (payment_url, refund_url, order_url)
+      `https://api.cashfree.com/lrs/webhooks/${(payment_url, refund_url, order_url)
       }`
     );
     console.log(response.payment_url);
@@ -70,8 +69,8 @@ exports.createOrder = async (req, res) => {
       userid
     } = req.body;
 
-    const purposes = await remitt.findOne({remitter_id:remitter_id});
-    
+    const purposes = await remitt.findOne({ remitter_id: remitter_id });
+
 
     const newBeneficiary = new orderr({
       order_id,
@@ -103,14 +102,18 @@ exports.createOrder = async (req, res) => {
       remarks,
       customer_declaration,
       status,
-      remitterid : purposes._id,
+      remitterid: purposes._id,
       userid
     });
 
     newBeneficiary.save()
 
-    const clientId = "TEST370281a1d99b47aa3a41930df0182073";
-    const clientSecret = "TEST95fd8451c7e275d78ddb4c769b20c92bdd1f3448";
+    // const clientId = "TEST370281a1d99b47aa3a41930df0182073";
+    // const clientSecret = "TEST95fd8451c7e275d78ddb4c769b20c92bdd1f3448";
+
+    const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
+    const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
+
 
     const headers = {
       "x-api-version": "2023-03-01",
@@ -144,8 +147,10 @@ exports.processOrderByorderId = async (req, res) => {
   try {
     const orderID = req.params.id;
 
-    const clientId = "TEST370281a1d99b47aa3a41930df0182073";
-    const clientSecret = "TEST95fd8451c7e275d78ddb4c769b20c92bdd1f3448";
+    // const clientId = "TEST370281a1d99b47aa3a41930df0182073";
+    // const clientSecret = "TEST95fd8451c7e275d78ddb4c769b20c92bdd1f3448";
+    const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
+    const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
 
     const headers = {
       "x-api-version": "2023-03-01",
@@ -179,7 +184,7 @@ exports.processOrderByorderId = async (req, res) => {
 exports.updateorder = async (req, res) => {
 
   try {
-    const menu = await orderr.findOneAndUpdate(req.params.id, req.body, {new: true});
+    const menu = await orderr.findOneAndUpdate(req.params.id, req.body, { new: true });
     if (!menu) {
       return res.status(404).send('Menu not found');
     }
@@ -196,7 +201,7 @@ exports.getallorder = async (req, res) => {
     if (!menu) {
       return res.status(404).send('Menu not found');
     }
-    res.json({msg:menu});
+    res.json({ msg: menu });
   } catch (err) {
     res.status(500).send(err);
   }
@@ -204,11 +209,11 @@ exports.getallorder = async (req, res) => {
 
 exports.getallorderById = async (req, res) => {
   try {
-    const menu = await orderr.findOne({order_id:req.params.id});
+    const menu = await orderr.findOne({ order_id: req.params.id });
     if (!menu) {
       return res.status(404).send('Menu not found');
     }
-    res.json({msg:menu});
+    res.json({ msg: menu });
   } catch (err) {
     res.status(500).send(err);
   }
@@ -216,11 +221,11 @@ exports.getallorderById = async (req, res) => {
 
 exports.getallorderByremitter_id = async (req, res) => {
   try {
-    const menu = await orderr.find({remitter_id:req.params.id});
+    const menu = await orderr.find({ remitter_id: req.params.id });
     if (!menu) {
       return res.status(404).send('Menu not found');
     }
-    res.json({msg:menu});
+    res.json({ msg: menu });
   } catch (err) {
     res.status(500).send(err);
   }
@@ -229,11 +234,11 @@ exports.getallorderByremitter_id = async (req, res) => {
 
 exports.getallorderbyuserid = async (req, res) => {
   try {
-    const menu = await orderr.find({userid:req.params.user}).populate("userid remitterid")
+    const menu = await orderr.find({ userid: req.params.user }).populate("userid remitterid")
     if (!menu) {
       return res.status(404).send('order not found');
     }
-    res.json({msg:menu});
+    res.json({ msg: menu });
   } catch (err) {
     res.status(500).send(err);
   }

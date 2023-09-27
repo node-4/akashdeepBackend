@@ -42,14 +42,18 @@ exports.matchAadharCard = async (req, res) => {
 exports.addharotp = async (req, res) => {
   try {
     const {
-        aadhaar_number
+      aadhaar_number
     } = req.body
-   
+
     const newBeneficiary = new addharcard({
-        aadhaar_number
+      aadhaar_number
     })
-    const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG"
-    const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84"
+    // const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG"
+    // const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84"
+
+    const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
+    const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
+
     const headers = {
       "x-api-version": "2023-03-01",
       "Content-Type": "application/json",
@@ -57,8 +61,10 @@ exports.addharotp = async (req, res) => {
       "X-Client-Secret": clientSecret,
     };
     console.log(headers);
+    const apiUrl = 'https://sandbox.cashfree.com/verification/offline-aadhaar/otp';
+    // const apiUrl = 'https://api.cashfree.com/verification/offline-aadhaar/otp';
     const response = await axios.post(
-      "https://api.cashfree.com/verification/offline-aadhaar/otp",
+      apiUrl,
       newBeneficiary,
       {
         headers: headers,
@@ -86,23 +92,28 @@ exports.verifyotp = async (req, res) => {
       otp,
       ref_id
     })
-    const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG"
-    const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84"
+    // const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG"
+    // const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84"
+    const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
+    const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
     const headers = {
       "x-api-version": "2023-03-01",
       "Content-Type": "application/json",
       "X-Client-ID": clientId,
       "X-Client-Secret": clientSecret,
     };
-   console.log(headers);
+    console.log(headers);
+    const apiUrl = 'https://sandbox.cashfree.com/verification/offline-aadhaar/verify';
+    // const apiUrl = 'https://api.cashfree.com/verification/offline-aadhaar/verify';
+
     const response = await axios.post(
-      "https://api.cashfree.com/verification/offline-aadhaar/verify",
+      apiUrl,
       newBeneficiary,
       {
         headers: headers,
       }
     );
-   // console.log(response);
+    // console.log(response);
     const createdBeneficiary = response.data;
     console.log(createdBeneficiary)
     newBeneficiary.save()

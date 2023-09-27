@@ -9,10 +9,15 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("cloudinary").v2;
 
 // configure Cloudinary credentials
+// cloudinary.config({
+//   cloud_name: "dbrvq9uxa",
+//   api_key: "567113285751718",
+//   api_secret: "rjTsz9ksqzlDtsrlOPcTs_-QtW4",
+// });
 cloudinary.config({
-  cloud_name: "dbrvq9uxa",
-  api_key: "567113285751718",
-  api_secret: "rjTsz9ksqzlDtsrlOPcTs_-QtW4",
+  cloud_name: "djgrqoefp", // node4
+  api_key: "274167243253962",
+  api_secret: "3mkqkDDusI5Hf4flGNkJNz4PHYg",
 });
 
 // configure multer to use Cloudinary as storage destination
@@ -126,7 +131,7 @@ exports.createuploadDocuments = async (req, res) => {
       }
 
       const fileUrls = req.files.map((file) => file.path);
-
+      console.log(fileUrls);
       const {
         bulk_doc_id,
         missing_documents,
@@ -151,9 +156,7 @@ exports.createuploadDocuments = async (req, res) => {
         })),
       });
 
-      console.log(newBeneficiary);
       const bene = await newBeneficiary.save();
-
       const user = await orderr.findOneAndUpdate(
         order_id,
         { missing_documents: fileUrls },
@@ -167,8 +170,10 @@ exports.createuploadDocuments = async (req, res) => {
       }
       await user.save();
 
-      const clientId = "TEST370281a1d99b47aa3a41930df0182073";
-      const clientSecret = "TEST95fd8451c7e275d78ddb4c769b20c92bdd1f3448";
+      // const clientId = "TEST370281a1d99b47aa3a41930df0182073";
+      // const clientSecret = "TEST95fd8451c7e275d78ddb4c769b20c92bdd1f3448";
+      const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
+      const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
 
       const headers = {
         "x-api-version": "2023-03-01",
@@ -190,7 +195,7 @@ exports.createuploadDocuments = async (req, res) => {
       const responseArray = await Promise.all(responsePromises);
       const createdBeneficiaries = responseArray.map((response) => response.data);
 
-      console.log(createdBeneficiaries);
+      // console.log(createdBeneficiaries);
 
       res.status(201).send({ user: user, bene: bene });
     });
@@ -204,7 +209,7 @@ exports.createuploadDocuments = async (req, res) => {
 exports.getAllDoc = async (req, res) => {
   try {
     const currencies = await Doc.find();
-    res.status(200).json({ msg:currencies });
+    res.status(200).json({ msg: currencies });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error.' });
@@ -217,7 +222,7 @@ exports.getDocById = async (req, res) => {
     if (!currency) {
       return res.status(404).json({ message: 'doc not found.' });
     }
-    res.status(200).json({ msg:currency });
+    res.status(200).json({ msg: currency });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error.' });

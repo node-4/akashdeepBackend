@@ -52,9 +52,9 @@ exports.create = async (req, res) => {
       selectCity: data.selectCity,
       city: cityData.selectcity,
       currencyYouHave: data.currencyYouHave,
-      currencyHave:currenciesHave.addcurrency,
+      currencyHave: currenciesHave.addcurrency,
       currencyYouWant: data.currencyYouWant,
-      currencyWant:currenciesWant.addcurrency,
+      currencyWant: currenciesWant.addcurrency,
       forexcard: data.forexcard,
       forexAmount: data.forexAmount,
       ConvertedAmount: ConvertedAmount,
@@ -78,11 +78,11 @@ exports.create = async (req, res) => {
 exports.findAll = async (req, res) => {
   try {
     const currencies = await ForeignCurrency.find();
-      res.status(200).json({
-        status: 200,
-        message: "Order created successfully.",
-        data: currencies,
-      });
+    res.status(200).json({
+      status: 200,
+      message: "Order created successfully.",
+      data: currencies,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -115,8 +115,12 @@ exports.update = async (req, res) => {
     const pan = req.body.panCard
 
 
-    const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG";
-    const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84";
+    // const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG";
+    // const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84";
+
+    const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
+    const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
+
     const headers = {
       "x-api-version": "2023-03-01",
       "Content-Type": "application/json",
@@ -144,7 +148,7 @@ exports.update = async (req, res) => {
           uploadPanCard: req.body.pan,
           passport: req.body.passport,
           uploadPassport: req.body.passport1,
-          
+
         },
       },
       { new: true }
@@ -152,7 +156,7 @@ exports.update = async (req, res) => {
 
     res.status(201).json(updatedCurrencyConverter);
 
-   
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -162,7 +166,7 @@ exports.updateAccountDetails = async (req, res) => {
   try {
     console.log("hi");
     let orderId = await reffralCode();
-    let customer =await reffralCode();
+    let customer = await reffralCode();
     const data = {
       beneficiaryName: req.body.beneficiaryName,
       transactionAmount: req.body.transactionAmount,

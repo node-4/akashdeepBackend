@@ -12,8 +12,7 @@ exports.convertCurrencyccc = async (req, res) => {
     const response = await axios.get(
       //`https://api.exchangerate-api.com/v4/latest/${fromCurrency}`,
       /* 'https://v6.exchangerate-api.com/v6/12d331a841b6fcb37fc60cc5/latest/${fromCurrency}'*/
-      `https://api.cashfree.com/lrs/webhooks/${
-        (payment_url, refund_url, order_url)
+      `https://api.cashfree.com/lrs/webhooks/${(payment_url, refund_url, order_url)
       }`
     );
     console.log(response.payment_url);
@@ -36,27 +35,30 @@ exports.convertCurrencyccc = async (req, res) => {
 exports.createFxRate = async (req, res) => {
   try {
     const {
-        to_currency,
-        to_amount,
-        from_amount,
-        purpose,
-        remitter_id,
-        customer_declaration,
-        education_loan,
+      to_currency,
+      to_amount,
+      from_amount,
+      purpose,
+      remitter_id,
+      customer_declaration,
+      education_loan,
     } = req.body;
 
     const newBeneficiary = new Fx({
-        to_currency,
-        to_amount,
-        from_amount,
-        purpose,
-        remitter_id,
-        customer_declaration,
-        education_loan,
+      to_currency,
+      to_amount,
+      from_amount,
+      purpose,
+      remitter_id,
+      customer_declaration,
+      education_loan,
     });
 
-    const clientId = "TEST370281a1d99b47aa3a41930df0182073";
-    const clientSecret = "TEST95fd8451c7e275d78ddb4c769b20c92bdd1f3448";
+    // const clientId = "TEST370281a1d99b47aa3a41930df0182073";
+    // const clientSecret = "TEST95fd8451c7e275d78ddb4c769b20c92bdd1f3448";
+
+    const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
+    const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
 
     const headers = {
       "x-api-version": "2023-03-01",
@@ -74,7 +76,7 @@ exports.createFxRate = async (req, res) => {
       }
     );
 
-   // console.log(response);
+    // console.log(response);
     const createdBeneficiary = response.data;
     console.log(createdBeneficiary)
 

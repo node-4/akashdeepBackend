@@ -78,8 +78,10 @@ exports.createRemitter = async (req, res) => {
     });
     console.log(newBeneficiary);
 
-    const clientId = "TEST370281a1d99b47aa3a41930df0182073";
-    const clientSecret = "TEST95fd8451c7e275d78ddb4c769b20c92bdd1f3448";
+    // const clientId = "TEST370281a1d99b47aa3a41930df0182073";
+    // const clientSecret = "TEST95fd8451c7e275d78ddb4c769b20c92bdd1f3448";
+    const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
+    const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
 
     const headers = {
       "x-api-version": "2023-03-01",
