@@ -3,6 +3,7 @@ const axios = require("axios");
 var newOTP = require("otp-generators");
 const currencyModel = require("../model/bookthisorder/addcurrency");
 const cityModel = require("../model/bookthisorder/selectcity");
+const Rate = require("../model/rate");
 
 exports.create = async (req, res) => {
   try {
@@ -17,37 +18,26 @@ exports.create = async (req, res) => {
       name: req.body.name,
       mobile: req.body.mobile,
     };
-
-    req.body.otp = newOTP.generate(4, {
-      alphabets: false,
-      upperCase: false,
-      specialChar: false,
-    });
-
-    const cityData = await cityModel.findById({
-      _id: data.selectCity,
-    });
+    req.body.otp = newOTP.generate(4, { alphabets: false, upperCase: false, specialChar: false, });
+    const cityData = await cityModel.findById({ _id: data.selectCity, });
     console.log(cityData.selectcity);
-
-    const currenciesHave = await currencyModel.findById({
-      _id: data.currencyYouHave,
-    });
+    const currenciesHave = await currencyModel.findById({ _id: data.currencyYouHave, });
     console.log(currenciesHave.addcurrency);
-
-    const currenciesWant = await currencyModel.findById({
-      _id: data.currencyYouWant,
-    });
+    const currenciesWant = await currencyModel.findById({ _id: data.currencyYouWant, });
     console.log(currenciesWant.addcurrency);
     // res.status(200).json(currencies);
     // Make a request to an external currency conversion API
-    const response = await axios.get(
-      `https://api.currencyscoop.com/v1/convert?api_key=4b9a3c48ebe3250b32d97a7031359674&from=${currenciesWant.addcurrency}&to=INR&amount=${data.forexAmount}`
-    );
 
+    const rates = await Rate.findOne({ to_currency: 'INR', from_currency: currenciesWant.addcurrency, });
+    if (rates) {
+      return res.status(500).send('Rate already exists');
+    }
+    // const response = await axios.get(
+    //   `https://api.currencyscoop.com/v1/convert?api_key=4b9a3c48ebe3250b32d97a7031359674&from=${currenciesWant.addcurrency}&to=INR&amount=${data.forexAmount}`
+    // );
     console.log(response.data.value);
-    const ConvertedAmount = response.data.value;
-    const total = response.data.value;
-
+    const ConvertedAmount = rates.amount * data.forexAmount;
+    const total = rates.amount * data.forexAmount;
     let obj = {
       selectCity: data.selectCity,
       city: cityData.selectcity,
@@ -65,46 +55,42 @@ exports.create = async (req, res) => {
       name: data.name,
       mobile: data.mobile,
     };
-
     const currency = new ForeignCurrency(obj);
     const result = await currency.save();
-    res.status(201).json(result);
+    return res.status(201).json(result);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
-
 exports.findAll = async (req, res) => {
   try {
     const currencies = await ForeignCurrency.find();
-    res.status(200).json({
+    return res.status(200).json({
       status: 200,
       message: "Order created successfully.",
       data: currencies,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
-
 exports.findOne = async (req, res) => {
   try {
     const currency = await ForeignCurrency.findById(req.params.id);
     if (!currency) {
-      res.status(404).json({ message: "Currency not found" });
+      return res.status(404).json({ message: "Currency not found" });
     } else {
-      res.status(200).json({
+      return res.status(200).json({
         status: 200,
         message: "Order created successfully.",
         data: currency,
       });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
-
 exports.update = async (req, res) => {
   try {
     console.log("hi");
@@ -113,7 +99,10 @@ exports.update = async (req, res) => {
     let pass = req.files["passportt"]
     req.body.passport1 = pass[0].path
     const pan = req.body.panCard
-
+    let ticket = req.files["ticket"]
+    req.body.ticket = ticket[0].path
+    let visa = req.files["visa"]
+    req.body.visa = visa[0].path
 
     // const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG";
     // const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84";
@@ -135,33 +124,16 @@ exports.update = async (req, res) => {
         headers: headers,
       }
     );
-
     const createdBeneficiary = response.data;
     console.log(createdBeneficiary);
-
-    const updatedCurrencyConverter = await ForeignCurrency.findByIdAndUpdate(
-      { _id: req.params.id },
-      {
-        $set: {
-          panCard: pan,
-          panStatus: response.data.pan_status,
-          uploadPanCard: req.body.pan,
-          passport: req.body.passport,
-          uploadPassport: req.body.passport1,
-
-        },
-      },
-      { new: true }
-    );
-
-    res.status(201).json(updatedCurrencyConverter);
+    const updatedCurrencyConverter = await ForeignCurrency.findByIdAndUpdate({ _id: req.params.id }, { $set: { panCard: pan, panStatus: response.data.pan_status, uploadPanCard: req.body.pan, passport: req.body.passport, uploadPassport: req.body.passport1, visa: req.body.visa, ticket: req.body.ticket, }, }, { new: true });
+    return res.status(201).json(updatedCurrencyConverter);
 
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
-
 exports.updateAccountDetails = async (req, res) => {
   try {
     console.log("hi");
@@ -203,30 +175,28 @@ exports.updateAccountDetails = async (req, res) => {
       { new: true }
     );
     if (!currency) {
-      res.status(404).json({ message: "Currency not found" });
+      return res.status(404).json({ message: "Currency not found" });
     } else {
-      res.status(200).json(currency);
+      return res.status(200).json(currency);
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
-
 exports.delete = async (req, res) => {
   try {
     const currency = await ForeignCurrency.findByIdAndDelete(
       req.params.currencyId
     );
     if (!currency) {
-      res.status(404).json({ message: "Currency not found" });
+      return res.status(404).json({ message: "Currency not found" });
     } else {
-      res.status(200).json({ message: "Currency deleted successfully" });
+      return res.status(200).json({ message: "Currency deleted successfully" });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
-
 exports.convertCurrency = async (req, res) => {
   const { fromCurrency, toCurrency, amount } = req.body;
 
@@ -239,14 +209,14 @@ exports.convertCurrency = async (req, res) => {
     const rate = exchangeRates[toCurrency];
     const convertedAmount = amount * rate;
 
-    res.status(200).json({
+    return res.status(200).json({
       from: fromCurrency,
       to: toCurrency,
       amount: amount,
       convertedAmount: convertedAmount,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
 

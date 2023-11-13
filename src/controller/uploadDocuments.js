@@ -126,105 +126,52 @@ exports.createuploadDocuments = async (req, res) => {
   try {
     upload.array("image", 5)(req, res, async (err) => {
       if (err) {
-        console.log(err);
         return res.status(400).json({ msg: err.message });
       }
-
       const fileUrls = req.files.map((file) => file.path);
-      console.log(fileUrls);
-      const {
-        bulk_doc_id,
-        missing_documents,
-        overridden_documents,
-        file_name,
-        document_type,
-      } = req.body;
-
+      const { bulk_doc_id, missing_documents, overridden_documents, file_name, document_type, } = req.body;
       const order_id = req.params.id;
-
-      const newBeneficiary = new Doc({
-        bulk_doc_id,
-        missing_documents: fileUrls.map((fileUrl) => ({
-          file_name: fileUrl || file_name || file,
-          document_type,
-        })),
-        uploaded_documents: fileUrls.map((fileUrl) => ({
-          document_type,
-        })),
-        overridden_documents: fileUrls.map((fileUrl) => ({
-          document_type,
-        })),
-      });
-
+      const newBeneficiary = new Doc({ bulk_doc_id, missing_documents: fileUrls.map((fileUrl) => ({ file_name: fileUrl || file_name || file, document_type, })), uploaded_documents: fileUrls.map((fileUrl) => ({ document_type, })), overridden_documents: fileUrls.map((fileUrl) => ({ document_type, })), });
       const bene = await newBeneficiary.save();
-      const user = await orderr.findOneAndUpdate(
-        order_id,
-        { missing_documents: fileUrls },
-        {
-          new: true,
-          runValidators: true,
-        }
-      );
+      const user = await orderr.findOneAndUpdate(order_id, { missing_documents: fileUrls }, { new: true, runValidators: true, });
       if (!user) {
         return res.status(404).send("User not found");
       }
       await user.save();
-
       // const clientId = "TEST370281a1d99b47aa3a41930df0182073";
       // const clientSecret = "TEST95fd8451c7e275d78ddb4c769b20c92bdd1f3448";
       const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
       const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
-
-      const headers = {
-        "x-api-version": "2023-03-01",
-        "Content-Type": "application/pdf",
-        "X-Client-ID": clientId,
-        "X-Client-Secret": clientSecret,
-      };
-
-      const responsePromises = fileUrls.map((fileUrl) =>
-        axios.post(
-          `https://sandbox.cashfree.com/pg/lrs/orders/${order_id}/documents/upload`,
-          { file: fileUrl },
-          {
-            headers: headers,
-          }
-        )
-      );
-
+      const headers = { "x-api-version": "2023-03-01", "Content-Type": "application/pdf", "X-Client-ID": clientId, "X-Client-Secret": clientSecret, };
+      const responsePromises = fileUrls.map((fileUrl) => axios.post(`https://sandbox.cashfree.com/pg/lrs/orders/${order_id}/documents/upload`, { file: fileUrl }, { headers: headers, }));
       const responseArray = await Promise.all(responsePromises);
       const createdBeneficiaries = responseArray.map((response) => response.data);
-
       // console.log(createdBeneficiaries);
-
-      res.status(201).send({ user: user, bene: bene });
+      return res.status(201).send({ user: user, bene: bene });
     });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ msg: error.message, name: error.name });
   }
 };
-
-
 exports.getAllDoc = async (req, res) => {
   try {
     const currencies = await Doc.find();
-    res.status(200).json({ msg: currencies });
+    return res.status(200).json({ msg: currencies });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error.' });
+    return res.status(500).json({ message: 'Internal server error.' });
   }
 };
-
 exports.getDocById = async (req, res) => {
   try {
     const currency = await Doc.findById(req.params.id);
     if (!currency) {
       return res.status(404).json({ message: 'doc not found.' });
     }
-    res.status(200).json({ msg: currency });
+    return res.status(200).json({ msg: currency });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error.' });
+    return res.status(500).json({ message: 'Internal server error.' });
   }
 };

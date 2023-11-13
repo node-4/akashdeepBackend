@@ -10,7 +10,7 @@ const convertToINR = (currency, amount) => {
     GBP: 102,
     // Add more currencies as required
   }
-  
+
   const forexRate = forexRates[currency] || 1;
   const INR_Amount = amount * forexRate;
   return INR_Amount;
@@ -30,10 +30,10 @@ exports.bookThisOrder = async (req, res) => {
       total,
     });
     const savedOrder = await order.save();
-    res.status(201).json(savedOrder);
+    return res.status(201).json(savedOrder);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -44,10 +44,10 @@ exports.bookThisOrder = async (req, res) => {
 exports.getAllOrders = async (req, res) => {
   try {
     const orders = await bookthisorderModel.find({});
-    res.status(200).json(orders);
+    return res.status(200).json(orders);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -58,10 +58,10 @@ exports.getOrderById = async (req, res) => {
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }
-    res.status(200).json(order);
+    return res.status(200).json(order);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -72,10 +72,10 @@ exports.updateOrderById = async (req, res) => {
     if (!updatedOrder) {
       return res.status(404).json({ message: 'Order not found' });
     }
-    res.status(200).json(updatedOrder);
+    return res.status(200).json(updatedOrder);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -86,9 +86,9 @@ exports.deleteOrderById = async (req, res) => {
     if (!deletedOrder) {
       return res.status(404).json({ message: 'Order not found' });
     }
-    res.status(200).json({ message: 'Order deleted successfully' });
+    return res.status(200).json({ message: 'Order deleted successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };

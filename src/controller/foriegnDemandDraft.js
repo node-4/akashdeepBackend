@@ -19,36 +19,19 @@ exports.createForiegnDraft = async (req, res) => {
       // name: req.body.name,
       mobile: req.body.mobile,
     };
-    req.body.otp = newOTP.generate(4, {
-      alphabets: false,
-      upperCase: false,
-      specialChar: false,
-    });
-
+    req.body.otp = newOTP.generate(4, { alphabets: false, upperCase: false, specialChar: false, });
     const cityData = await cityModel.findById({
       _id: data.selectCity,
     });
     console.log(cityData.selectcity);
-
-    const currenciesHave = await currencyModel.findById({
-      _id: data.currencyYouHave,
-    });
+    const currenciesHave = await currencyModel.findById({ _id: data.currencyYouHave, });
     console.log(currenciesHave.addcurrency);
-
-    const currenciesWant = await currencyModel.findById({
-      _id: data.currencyYouWant,
-    });
+    const currenciesWant = await currencyModel.findById({ _id: data.currencyYouWant, });
     console.log(currenciesWant.addcurrency);
-    // res.status(200).json(currencies);
-    // Make a request to an external currency conversion API
-    const response = await axios.get(
-      `https://api.currencyscoop.com/v1/convert?api_key=4b9a3c48ebe3250b32d97a7031359674&from=${currenciesWant.addcurrency}&to=INR&amount=${data.Amount}`
-    );
-
+    const response = await axios.get(`https://api.currencyscoop.com/v1/convert?api_key=4b9a3c48ebe3250b32d97a7031359674&from=${currenciesWant.addcurrency}&to=INR&amount=${data.Amount}`);
     console.log(response.data.value);
     const convertedAmt1 = response.data.value;
     const total = response.data.value;
-
     let obj = {
       selectCity: data.selectCity,
       city: cityData.selectcity,
@@ -69,25 +52,23 @@ exports.createForiegnDraft = async (req, res) => {
 
     const foriegnData = new foriegnDemand(obj);
     const result = await foriegnData.save();
-    res.status(201).json(result);
+    return res.status(201).json(result);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
-
 exports.getAllOrder = async (req, res) => {
   try {
     const order = await foriegnDemand.find();
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
-    res.status(200).json({ msg: order });
+    return res.status(200).json({ msg: order });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
-
 // Example controller function
 exports.getOrderById = async (req, res) => {
   try {
@@ -96,12 +77,11 @@ exports.getOrderById = async (req, res) => {
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
-    res.status(200).json({ msg: order });
+    return res.status(200).json({ msg: order });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
-
 // Example controller function
 exports.updateForiegnDraft = async (req, res) => {
   try {
@@ -125,27 +105,19 @@ exports.updateForiegnDraft = async (req, res) => {
       { new: true }
     );
     if (!currency) {
-      res.status(404).json({ message: "foriegn demandDraft not found" });
+      return res.status(404).json({ message: "foriegn demandDraft not found" });
     } else {
-      res
-        .status(200)
-        .send({
-          status: 200,
-          message: "updated successfully ",
-          data: currency,
-        });
+      return res.status(200).send({ status: 200, message: "updated successfully ", data: currency, });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
-
-
 exports.updateForiegnAccountDetails = async (req, res) => {
   try {
     console.log("hi");
     let orderId = await reffralCode();
-    let customer =await reffralCode();
+    let customer = await reffralCode();
     const data = {
       beneficiaryName: req.body.beneficiaryName,
       transactionAmount: req.body.transactionAmount,
@@ -182,16 +154,14 @@ exports.updateForiegnAccountDetails = async (req, res) => {
       { new: true }
     );
     if (!currency) {
-      res.status(404).json({ message: "Currency not found" });
+      return res.status(404).json({ message: "Currency not found" });
     } else {
-      res.status(200).json(currency);
+      return res.status(200).json(currency);
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
-
-
 // Example controller function
 exports.deleteOrder = async (req, res) => {
   try {
@@ -200,13 +170,11 @@ exports.deleteOrder = async (req, res) => {
     if (!deletedOrder) {
       return res.status(404).json({ error: "Order not found" });
     }
-    res.status(200).json({ message: "Order deleted successfully" });
+    return res.status(200).json({ message: "Order deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
-
-
 const reffralCode = async () => {
   var digits = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let OTP = "";

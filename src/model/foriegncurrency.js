@@ -5,22 +5,22 @@ const foriegncurrencySchema = mongoose.Schema({
     type: objectId,
     ref: "city",
   },
-  city:{
-    type:String
+  city: {
+    type: String
   },
   currencyYouHave: {
     type: objectId,
     ref: "currency",
   },
-  currencyHave:{
-    type:String
+  currencyHave: {
+    type: String
   },
   currencyYouWant: {
     type: objectId,
     ref: "currency",
   },
-  currencyWant:{
-    type:String
+  currencyWant: {
+    type: String
   },
   forexcard: {
     type: String,
@@ -36,95 +36,103 @@ const foriegncurrencySchema = mongoose.Schema({
   },
 
   /////////////////////////////////////////////
-  phone:{
-    type:String,
-    default:""
+  phone: {
+    type: String,
+    default: ""
   },
-  otp:{
-    type:String,
-    default:""
+  otp: {
+    type: String,
+    default: ""
   },
-  email:{
-    type:String,
-    default:""
+  email: {
+    type: String,
+    default: ""
   },
   /////////////////////////////////////////////
-  name:{
-    type:String,
-    default:""
+  name: {
+    type: String,
+    default: ""
   },
-  mobile:{
-    type:String,
-    default:""
+  mobile: {
+    type: String,
+    default: ""
   },
-  panCard:{
-    type:String,
-    default:""
+  panCard: {
+    type: String,
+    default: ""
   },
-  uploadPanCard:{
-    type:String,
-    default:""
+  uploadPanCard: {
+    type: String,
+    default: ""
   },
-  panStatus:{
-    type:String
+  panStatus: {
+    type: String
   },
-  passport:{
-    type:String,
-    default:""
+  passport: {
+    type: String,
+    default: ""
   },
-  uploadPassport:{
-    type:String,
-    default:""
+  uploadPassport: {
+    type: String,
+    default: ""
+  },
+  visa: {
+    type: String,
+    default: ""
+  },
+  ticket: {
+    type: String,
+    default: ""
   },
   ///////////////////////////////////////////////
-  beneficiaryName:{
-    type:String,
-    default:""
+  beneficiaryName: {
+    type: String,
+    default: ""
   },
-  transactionAmount:{
-    type:String,
-    default:""
+  transactionAmount: {
+    type: String,
+    default: ""
   },
-  AmountInWords:{
-    type:String,
-    default:""
+  AmountInWords: {
+    type: String,
+    default: ""
   },
-  beneficiaryAccountNumber:{
-    type:String,
-    default:""
+  beneficiaryAccountNumber: {
+    type: String,
+    default: ""
   },
-  ifscCode:{
-    type:String,
-    default:""
+  ifscCode: {
+    type: String,
+    default: ""
   },
-  bankNameAndAddress:{
-    type:String,
-    default:""
+  bankNameAndAddress: {
+    type: String,
+    default: ""
   },
-  referenceNo_OrderID:{
-    type:String,
-    default:""
+  referenceNo_OrderID: {
+    type: String,
+    default: ""
   },
   ///////////////////////////////////////////////////////
-  challenCreatedOn:{
-    type:String,
-    default:""
+  challenCreatedOn: {
+    type: String,
+    default: ""
   },
-  CA_Number:{
-    type:String,
-    default:""
+  CA_Number: {
+    type: String,
+    default: ""
   },
-  emailAddress:{
-    type:String,
-    default:""
+  emailAddress: {
+    type: String,
+    default: ""
   },
-  customerID:{
-    type:String,
-    default:""
+  customerID: {
+    type: String,
+    default: ""
   },
-  mobile:{
-    type:String,
-    default:""
+  mobile: {
+    type: String,
+    default: ""
   }
 });
 

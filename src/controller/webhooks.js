@@ -2,11 +2,7 @@ const web = require("../model/webhooks");
 const axios = require("axios");
 
 exports.convertCurrencyccc = async (req, res) => {
-  const {
-    /*fromCurrency, toCurrency, amount*/ payment_url,
-    refund_url,
-    order_url,
-  } = req.body;
+  const { payment_url, refund_url, order_url,/*fromCurrency, toCurrency, amount*/ } = req.body;
   console.log("hi");
   try {
     const response = await axios.get(
@@ -31,44 +27,23 @@ exports.convertCurrencyccc = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 exports.createwebhooks = async (req, res) => {
   try {
     const { payment_url, refund_url, order_url } = req.body;
-
-    const newBeneficiary = new web({
-      payment_url, refund_url, order_url
-    });
-
+    const newBeneficiary = new web({ payment_url, refund_url, order_url });
     // const clientId = "TEST370281a1d99b47aa3a41930df0182073";
     // const clientSecret = "TEST95fd8451c7e275d78ddb4c769b20c92bdd1f3448";
-
-
     const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
     const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
-    const headers = {
-      "x-api-version": "2023-03-01",
-      "Content-Type": "application/json",
-      "X-Client-ID": clientId,
-      "X-Client-Secret": clientSecret,
-    };
-
+    const headers = { "x-api-version": "2023-03-01", "Content-Type": "application/json", "X-Client-ID": clientId, "X-Client-Secret": clientSecret, };
     console.log(headers);
-    const response = await axios.post(
-      "https://sandbox.cashfree.com/pg/lrs/webhooks",
-      newBeneficiary,
-      {
-        headers: headers,
-      }
-    );
-
+    const response = await axios.post("https://sandbox.cashfree.com/pg/lrs/webhooks", newBeneficiary, { headers: headers, });
     // console.log(response);
     const createdBeneficiary = response.data;
     console.log(createdBeneficiary);
-
-    res.status(201).json(createdBeneficiary);
+    return res.status(201).json(createdBeneficiary);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };

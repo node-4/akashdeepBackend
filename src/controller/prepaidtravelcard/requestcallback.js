@@ -5,22 +5,20 @@ exports.createRequestCallback = async (req, res) => {
   try {
     const newRequestCallback = new RequestCall(req.body);
     const savedRequestCallback = await newRequestCallback.save();
-    res.status(201).json(savedRequestCallback);
+    return res.status(201).json(savedRequestCallback);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
-
 // READ all request callbacks
 exports.getAllRequestCallbacks = async (req, res) => {
   try {
     const requestCallbacks = await RequestCall.find();
-    res.json(requestCallbacks);
+    return res.json(requestCallbacks);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
-
 // READ a single request callback by ID
 exports.getRequestCallbackById = async (req, res) => {
   try {
@@ -28,12 +26,11 @@ exports.getRequestCallbackById = async (req, res) => {
     if (!requestCallback) {
       return res.status(404).json({ error: 'Request callback not found' });
     }
-    res.json(requestCallback);
+    return res.json(requestCallback);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
-
 // UPDATE a request callback by ID
 exports.updateRequestCallbackById = async (req, res) => {
   try {
@@ -41,12 +38,11 @@ exports.updateRequestCallbackById = async (req, res) => {
     if (!requestCallback) {
       return res.status(404).json({ error: 'Request callback not found' });
     }
-    res.json(requestCallback);
+    return res.json(requestCallback);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
-
 // DELETE a request callback by ID
 exports.deleteRequestCallbackById = async (req, res) => {
   try {
@@ -54,8 +50,8 @@ exports.deleteRequestCallbackById = async (req, res) => {
     if (!requestCallback) {
       return res.status(404).json({ error: 'Request callback not found' });
     }
-    res.json({ message: 'Request callback deleted' });
+    return res.json({ message: 'Request callback deleted' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };

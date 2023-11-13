@@ -12,7 +12,6 @@ exports.createBetterRate = async (req, res) => {
     return res.status(500).json({ message: 'Failed to create better rate order.' });
   }
 };
-
 exports.getAllBetterRates = async (req, res) => {
   try {
     const betterRates = await BetterRate.find();
@@ -22,7 +21,6 @@ exports.getAllBetterRates = async (req, res) => {
     return res.status(500).json({ message: 'Failed to get better rate orders.' });
   }
 };
-
 exports.updateBetterRate = async (req, res) => {
   try {
     const { betterRateId } = req.params;
@@ -33,7 +31,6 @@ exports.updateBetterRate = async (req, res) => {
     return res.status(500).json({ message: 'Failed to update better rate order.' });
   }
 };
-
 exports.deleteBetterRate = async (req, res) => {
   try {
     const { betterRateId } = req.params;
@@ -44,9 +41,6 @@ exports.deleteBetterRate = async (req, res) => {
     return res.status(500).json({ message: 'Failed to delete better rate order.' });
   }
 };
-
-
-
 // Route for converting a forex value to an INR amount
 exports.convertRate = async (req, res) => {
   // router.get('/convert/:currency/:forexAmount', async (req, res) => {
@@ -61,20 +55,13 @@ exports.convertRate = async (req, res) => {
     return res.status(500).json({ message: 'Failed to convert forex amount to INR.' });
   }
 }
-
-
 exports.webhooks = async (req, res) => {
   // router.get('/convert/:currency/:forexAmount', async (req, res) => {
   try {
     const { currency, forexAmount } = req.params;
-
-    // Make a request to an external currency conversion API
     const response = await axios.get(`https://api.cashfree.com/lrs/webhooks?api_key=375328a2de735cc1dfe8b6c115823573&from=${currency}&to=INR&amount=${forexAmount}`);
-
     console.log(response)
-    // Extract the converted INR amount from the API response
     const inrAmount = response.data.response.value;
-
     return res.json({ inrAmount });
   } catch (error) {
     console.error(error);

@@ -4,11 +4,7 @@ const remitt = require("../model/remiiter1");
 const userModel = require("../model/remitter");
 
 exports.convertCurrencyccc = async (req, res) => {
-  const {
-    /*fromCurrency, toCurrency, amount*/ payment_url,
-    refund_url,
-    order_url,
-  } = req.body;
+  const { payment_url, refund_url, order_url,/*fromCurrency, toCurrency, amount*/ } = req.body;
   console.log("hi");
   try {
     const response = await axios.get(
@@ -30,10 +26,9 @@ exports.convertCurrencyccc = async (req, res) => {
     //   });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
-
 exports.createOrder = async (req, res) => {
   try {
     const {
@@ -135,14 +130,12 @@ exports.createOrder = async (req, res) => {
     const createdBeneficiary = response.data;
     console.log(createdBeneficiary);
 
-    res.status(201).json(createdBeneficiary);
+    return res.status(201).json(createdBeneficiary);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
-
-
 exports.processOrderByorderId = async (req, res) => {
   try {
     const orderID = req.params.id;
@@ -173,73 +166,65 @@ exports.processOrderByorderId = async (req, res) => {
     const createdBeneficiary = response.data;
     console.log(createdBeneficiary);
 
-    res.status(201).json(createdBeneficiary);
+    return res.status(201).json(createdBeneficiary);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
-
-
 exports.updateorder = async (req, res) => {
 
   try {
-    const menu = await orderr.findOneAndUpdate(req.params.id, req.body, { new: true });
+    const menu = await orderr.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true });
     if (!menu) {
       return res.status(404).send('Menu not found');
     }
-    res.json(menu);
+    return res.json(menu);
   } catch (err) {
-    res.status(500).send(err);
+    return res.status(500).send(err);
   }
 }
-
-
 exports.getallorder = async (req, res) => {
   try {
     const menu = await orderr.find();
     if (!menu) {
       return res.status(404).send('Menu not found');
     }
-    res.json({ msg: menu });
+    return res.json({ msg: menu });
   } catch (err) {
-    res.status(500).send(err);
+    return res.status(500).send(err);
   }
 }
-
 exports.getallorderById = async (req, res) => {
   try {
     const menu = await orderr.findOne({ order_id: req.params.id });
     if (!menu) {
       return res.status(404).send('Menu not found');
     }
-    res.json({ msg: menu });
+    return res.json({ msg: menu });
   } catch (err) {
-    res.status(500).send(err);
+    return res.status(500).send(err);
   }
 }
-
 exports.getallorderByremitter_id = async (req, res) => {
   try {
     const menu = await orderr.find({ remitter_id: req.params.id });
     if (!menu) {
       return res.status(404).send('Menu not found');
     }
-    res.json({ msg: menu });
+    return res.json({ msg: menu });
   } catch (err) {
-    res.status(500).send(err);
+    return res.status(500).send(err);
   }
 }
-
-
 exports.getallorderbyuserid = async (req, res) => {
   try {
     const menu = await orderr.find({ userid: req.params.user }).populate("userid remitterid")
     if (!menu) {
       return res.status(404).send('order not found');
     }
-    res.json({ msg: menu });
+    return res.json({ msg: menu });
   } catch (err) {
-    res.status(500).send(err);
+    return res.status(500).send(err);
   }
 }

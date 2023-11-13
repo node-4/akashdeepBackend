@@ -6,9 +6,9 @@ exports.createTopCurrency = async (req, res) => {
     const { topCurrency } = req.body;
     // Create a new topCurrency document
     const newTopCurrency = await TopCurrency.create({ topCurrency });
-    res.status(201).json({ success: true, data: newTopCurrency });
+    return res.status(201).json({ success: true, data: newTopCurrency });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    return res.status(500).json({ success: false, error: err.message });
   }
 };
 
@@ -16,9 +16,9 @@ exports.createTopCurrency = async (req, res) => {
 exports.getAllTopCurrencies = async (req, res) => {
   try {
     const topCurrencies = await TopCurrency.find();
-    res.status(200).json({ success: true, data: topCurrencies });
+    return res.status(200).json({ success: true, data: topCurrencies });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    return res.status(500).json({ success: false, error: err.message });
   }
 };
 
@@ -36,9 +36,9 @@ exports.updateTopCurrency = async (req, res) => {
     if (!updatedTopCurrency) {
       return res.status(404).json({ success: false, error: 'TopCurrency not found' });
     }
-    res.status(200).json({ success: true, data: updatedTopCurrency });
+    return res.status(200).json({ success: true, data: updatedTopCurrency });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    return res.status(500).json({ success: false, error: err.message });
   }
 };
 
@@ -51,8 +51,8 @@ exports.deleteTopCurrency = async (req, res) => {
     if (!deletedTopCurrency) {
       return res.status(404).json({ success: false, error: 'TopCurrency not found' });
     }
-    res.status(200).json({ success: true, data: deletedTopCurrency });
+    return res.status(200).json({ success: true, data: deletedTopCurrency });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    return res.status(500).json({ success: false, error: err.message });
   }
 };

@@ -31,11 +31,7 @@ exports.updatePurposeStatus = async (req, res) => {
   try {
     const { purposeId } = req.params;
     const { status } = req.body;
-    const updatedPurpose = await Purpose.findByIdAndUpdate(
-      purposeId,
-      { status },
-      { new: true }
-    );
+    const updatedPurpose = await Purpose.findByIdAndUpdate({ _id: purposeId }, { $set: status }, { new: true });
     return res.status(200).json(updatedPurpose);
   } catch (error) {
     return res.status(500).json({ error: "Failed to update purpose status" });

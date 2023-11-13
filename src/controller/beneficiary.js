@@ -26,12 +26,9 @@ exports.convertCurrencyccc = async (req, res) => {
     //   });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
-
-
-
 exports.createBeneficiary = async (req, res) => {
   try {
     const {
@@ -96,14 +93,12 @@ exports.createBeneficiary = async (req, res) => {
     const createdBeneficiary = response.data;
 
     newBeneficiary.save()
-    res.status(201).json(createdBeneficiary);
+    return res.status(201).json(createdBeneficiary);
   } catch (error) {
     console.log(error)
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
-
-
 exports.getBeneficiary = async (req, res) => {
   try {
     const beneficiaryId = req.params.id;
@@ -128,17 +123,12 @@ exports.getBeneficiary = async (req, res) => {
 
     const beneficiary = response.data;
 
-    res.status(200).json(beneficiary);
+    return res.status(200).json(beneficiary);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
-
-
-
-
-
 // exports.getBeneficiaries = async (req, res) => {
 //   try {
 
@@ -161,10 +151,10 @@ exports.getBeneficiary = async (req, res) => {
 //     // Extract the beneficiaries from the response
 //     const beneficiaries = response.data;
 
-//     res.status(200).json(beneficiaries);
+//  return   res.status(200).json(beneficiaries);
 //   } catch (error) {
 //     console.log(error)
-//     res.status(500).json({ error: "Internal server error" });
+//  return   res.status(500).json({ error: "Internal server error" });
 //   }
 // };
 
@@ -177,13 +167,13 @@ exports.getBeneficiary = async (req, res) => {
 //     // Extract the beneficiary from the response
 //     const beneficiary = response.data;
 
-//     res.status(200).json(beneficiary);
+//  return   res.status(200).json(beneficiary);
 //   } catch (error) {
 //     if (error.response && error.response.status === 404) {
 //       return res.status(404).json({ error: "Beneficiary not found" });
 //     }
 
-//     res.status(500).json({ error: "Internal server error" });
+//  return   res.status(500).json({ error: "Internal server error" });
 //   }
 // };
 
@@ -197,13 +187,13 @@ exports.getBeneficiary = async (req, res) => {
 //     // Extract the updated beneficiary from the response
 //     const updatedBeneficiary = response.data;
 
-//     res.status(200).json(updatedBeneficiary);
+//  return   res.status(200).json(updatedBeneficiary);
 //   } catch (error) {
 //     if (error.response && error.response.status === 404) {
 //       return res.status(404).json({ error: "Beneficiary not found" });
 //     }
 
-//     res.status(500).json({ error: "Internal server error" });
+//  return   res.status(500).json({ error: "Internal server error" });
 //   }
 // };
 
@@ -216,13 +206,13 @@ exports.getBeneficiary = async (req, res) => {
 //     // Extract the deleted beneficiary from the response
 //     const deletedBeneficiary = response.data;
 
-//     res.status(200).json(deletedBeneficiary);
+//  return   res.status(200).json(deletedBeneficiary);
 //   } catch (error) {
 //     if (error.response && error.response.status === 404) {
 //       return res.status(404).json({ error: "Beneficiary not found" });
 //     }
 
-//     res.status(500).json({ error: "Internal server error" });
+//  return   res.status(500).json({ error: "Internal server error" });
 //   }
 // };
 
@@ -276,10 +266,10 @@ exports.getBeneficiary = async (req, res) => {
 //     // Save the new beneficiary document to the database
 //     const savedBeneficiary = await newBeneficiary.save();
 
-//     res.status(201).json(savedBeneficiary);
+//  return   res.status(201).json(savedBeneficiary);
 //   } catch (error) {
 //     // Handle any errors that occurred during the creation process
-//     res.status(500).json({ error: "Internal server error" });
+//  return   res.status(500).json({ error: "Internal server error" });
 //   }
 // };
 
@@ -289,9 +279,9 @@ exports.getBeneficiary = async (req, res) => {
 //     // Retrieve all beneficiary documents from the database
 //     const beneficiaries = await Beneficiary.find();
 
-//     res.status(200).json(beneficiaries);
+//  return   res.status(200).json(beneficiaries);
 //   } catch (error) {
-//     res.status(500).json({ error: "Internal server error" });
+//  return   res.status(500).json({ error: "Internal server error" });
 //   }
 // };
 
@@ -306,9 +296,9 @@ exports.getBeneficiary = async (req, res) => {
 //       return res.status(404).json({ error: "Beneficiary not found" });
 //     }
 
-//     res.status(200).json(beneficiary);
+//  return   res.status(200).json(beneficiary);
 //   } catch (error) {
-//     res.status(500).json({ error: "Internal server error" });
+//  return   res.status(500).json({ error: "Internal server error" });
 //   }
 // };
 
@@ -328,9 +318,9 @@ exports.getBeneficiary = async (req, res) => {
 //       return res.status(404).json({ error: "Beneficiary not found" });
 //     }
 
-//     res.status(200).json(updatedBeneficiary);
+//  return   res.status(200).json(updatedBeneficiary);
 //   } catch (error) {
-//     res.status(500).json({ error: "Internal server error" });
+//  return   res.status(500).json({ error: "Internal server error" });
 //   }
 // };
 
@@ -345,8 +335,8 @@ exports.getBeneficiary = async (req, res) => {
 //       return res.status(404).json({ error: "Beneficiary not found" });
 //     }
 
-//     res.status(200).json(deletedBeneficiary);
+//  return   res.status(200).json(deletedBeneficiary);
 //   } catch (error) {
-//     res.status(500).json({ error: "Internal server error" });
+//  return   res.status(500).json({ error: "Internal server error" });
 //   }
 // };

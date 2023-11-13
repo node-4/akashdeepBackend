@@ -9,8 +9,8 @@ cloudinary.config({ cloud_name: "dbrvq9uxa", api_key: "567113285751718", api_sec
 const storage = new CloudinaryStorage({
         cloudinary: cloudinary, params: { folder: "images/image", allowed_formats: ["jpg", "jpeg", "png", "PNG", "xlsx", "xls", "pdf", "PDF"], },
 })
-const upload = multer({storage: storage})
-var cpUpload = upload.fields([{name: 'pan', maxCount: 1},{ name: 'passportt', maxCount: 1 }])
+const upload = multer({ storage: storage })
+var cpUpload = upload.fields([{ name: 'pan', maxCount: 1 }, { name: 'passportt', maxCount: 1 }, { name: 'ticket', maxCount: 1 }, { name: 'visa', maxCount: 1 }])
 
 router.post('/convert', currencyController.convertCurrency);
 
@@ -24,7 +24,7 @@ router.get('/', currencyController.findAll);
 router.get('/:id', currencyController.findOne);
 
 
-router.put('/:id', cpUpload,currencyController.update);
+router.put('/:id', cpUpload, currencyController.update);
 
 router.put('/updateAccountDetails/:id', currencyController.updateAccountDetails);
 

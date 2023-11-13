@@ -13,14 +13,13 @@ exports.createStudentLoan = async (req, res) => {
     const savedStudentLoan = await studentLoan.save();
 
     // Send a response with the saved student loan document
-    res.status(201).json(savedStudentLoan);
+    return res.status(201).json(savedStudentLoan);
   } catch (error) {
     // If an error occurs, handle it in the catch block
     console.error(error);
-    res.status(500).json({ error: 'Failed to create student loan' });
+    return res.status(500).json({ error: 'Failed to create student loan' });
   }
 };
-
 // Example controller function to handle retrieving all student loans
 exports.getAllStudentLoans = async (req, res) => {
   try {
@@ -28,14 +27,13 @@ exports.getAllStudentLoans = async (req, res) => {
     const studentLoans = await studentLoanModel.find();
 
     // Send a response with the retrieved student loans
-    res.json(studentLoans);
+    return res.json(studentLoans);
   } catch (error) {
     // If an error occurs, handle it in the catch block
     console.error(error);
-    res.status(500).json({ error: 'Failed to retrieve student loans' });
+    return res.status(500).json({ error: 'Failed to retrieve student loans' });
   }
 };
-
 exports.getStudentLoanById = async (req, res) => {
   try {
     // Extract the student loan ID from the request parameters
@@ -50,14 +48,13 @@ exports.getStudentLoanById = async (req, res) => {
     }
 
     // Send a response with the retrieved student loan
-    res.json(studentLoan);
+    return res.json(studentLoan);
   } catch (error) {
     // If an error occurs, handle it in the catch block
     console.error(error);
-    res.status(500).json({ error: 'Failed to get student loan' });
+    return res.status(500).json({ error: 'Failed to get student loan' });
   }
 };
-
 // Example controller function to handle updating a student loan
 exports.updateStudentLoan = async (req, res) => {
   try {
@@ -78,14 +75,13 @@ exports.updateStudentLoan = async (req, res) => {
     }
 
     // Send a response with the updated student loan
-    res.json(updatedStudentLoan);
+    return res.json(updatedStudentLoan);
   } catch (error) {
     // If an error occurs, handle it in the catch block
     console.error(error);
-    res.status(500).json({ error: 'Failed to update student loan' });
+    return res.status(500).json({ error: 'Failed to update student loan' });
   }
 };
-
 // Example controller function to handle deleting a student loan
 exports.deleteStudentLoan = async (req, res) => {
   try {
@@ -101,10 +97,10 @@ exports.deleteStudentLoan = async (req, res) => {
     }
 
     // Send a response with the deleted student loan
-    res.json(deletedStudentLoan);
+    return res.json(deletedStudentLoan);
   } catch (error) {
     // If an error occurs, handle it in the catch block
     console.error(error);
-    res.status(500).json({ error: 'Failed to delete student loan' });
+    return res.status(500).json({ error: 'Failed to delete student loan' });
   }
 };
