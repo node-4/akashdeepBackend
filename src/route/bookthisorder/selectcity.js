@@ -7,6 +7,7 @@ router.post('/cities', cityController.createCity);
 
 // READ all cities
 router.get('/cities', cityController.getCity);
+router.get('/getCitybyType/:type', cityController.getCitybyType);
 
 // UPDATE a city
 router.put('/cities/:id', cityController.updateCity);

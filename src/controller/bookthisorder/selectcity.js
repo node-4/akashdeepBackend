@@ -2,8 +2,8 @@ const cityModel = require('../../model/bookthisorder/selectcity');
 
 exports.createCity = async (req, res) => {
   try {
-    const { selectcity } = req.body;
-    const newCity = await cityModel.create({ selectcity });
+    const { selectcity, type } = req.body;
+    const newCity = await cityModel.create({ selectcity, type });
     res.status(201).json(newCity);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -13,6 +13,18 @@ exports.createCity = async (req, res) => {
 exports.getCity = async (req, res) => {
   try {
     const cities = await cityModel.find();
+    if (!cities) {
+      return res.status(400).json({ error: "cities data not provided" });
+    }
+    res.status(201).json({ success: true, data: cities })
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.getCitybyType = async (req, res) => {
+  try {
+    const cities = await cityModel.find({ type: req.params.type });
     if (!cities) {
       return res.status(400).json({ error: "cities data not provided" });
     }
