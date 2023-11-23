@@ -8,6 +8,7 @@ router.post('/cities', cityController.createCity);
 // READ all cities
 router.get('/cities', cityController.getCity);
 router.get('/getCitybyType/:type', cityController.getCitybyType);
+router.get('/getCityforDelhiNcr', cityController.getCityforDelhiNcr);
 
 // UPDATE a city
 router.put('/cities/:id', cityController.updateCity);

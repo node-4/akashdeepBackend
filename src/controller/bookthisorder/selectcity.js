@@ -21,7 +21,17 @@ exports.getCity = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
+exports.getCityforDelhiNcr = async (req, res) => {
+  try {
+    const cities = await cityModel.findOne({ selectcity: "Delhi/NCR", type: "city" });
+    if (!cities) {
+      return res.status(400).json({ error: "cities data not provided" });
+    }
+    return res.status(201).json({ success: true, data: cities })
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 exports.getCitybyType = async (req, res) => {
   try {
     const cities = await cityModel.find({ type: req.params.type });
