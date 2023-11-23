@@ -6,7 +6,7 @@ const citySchema = mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["city", "country"],
+    enum: ["city", "state", "country"],
     default: "city",
   },
 });
