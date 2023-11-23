@@ -25,19 +25,15 @@ exports.create = async (req, res) => {
     console.log(currenciesHave.addcurrency);
     const currenciesWant = await currencyModel.findById({ _id: data.currencyYouWant, });
     console.log(currenciesWant.addcurrency);
-    // res.status(200).json(currencies);
-    // Make a request to an external currency conversion API
-
     const rates = await Rate.findOne({ to_currency: 'INR', from_currency: currenciesWant.addcurrency, });
-    if (rates) {
-      return res.status(500).send('Rate already exists');
+    if (!rates) {
+      return res.status(404).json({ message: "Rate not found" });
     }
     // const response = await axios.get(
     //   `https://api.currencyscoop.com/v1/convert?api_key=4b9a3c48ebe3250b32d97a7031359674&from=${currenciesWant.addcurrency}&to=INR&amount=${data.forexAmount}`
     // );
-    console.log(response.data.value);
-    const ConvertedAmount = rates.amount * data.forexAmount;
-    const total = rates.amount * data.forexAmount;
+    const ConvertedAmount = rates.amount * Number(req.body.forexAmount);
+    const total = rates.amount * Number(req.body.forexAmount);
     let obj = {
       selectCity: data.selectCity,
       city: cityData.selectcity,
@@ -106,7 +102,7 @@ exports.update = async (req, res) => {
 
     // const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG";
     // const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84";
-
+    console.log(req.body);
     const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
     const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
 
@@ -118,20 +114,21 @@ exports.update = async (req, res) => {
     };
 
     const response = await axios.post(
-      "https://api.cashfree.com/verification/pan",
+      // "https://api.cashfree.com/verification/pan",
+      "https://sandbox.cashfree.com/verification/pan",
       { pan },
       {
         headers: headers,
       }
     );
+    console.log(response);
     const createdBeneficiary = response.data;
-    console.log(createdBeneficiary);
     const updatedCurrencyConverter = await ForeignCurrency.findByIdAndUpdate({ _id: req.params.id }, { $set: { panCard: pan, panStatus: response.data.pan_status, uploadPanCard: req.body.pan, passport: req.body.passport, uploadPassport: req.body.passport1, visa: req.body.visa, ticket: req.body.ticket, }, }, { new: true });
     return res.status(201).json(updatedCurrencyConverter);
 
 
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error });
   }
 };
 exports.updateAccountDetails = async (req, res) => {
