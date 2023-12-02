@@ -65,7 +65,7 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
-app.get("/home", (req, res) => {
+app.get("/", (req, res) => {
   res.status(200).send({ msg: "Working App" });
 });
 
