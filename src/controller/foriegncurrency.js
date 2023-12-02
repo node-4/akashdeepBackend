@@ -99,28 +99,46 @@ exports.update = async (req, res) => {
     req.body.ticket = ticket[0].path
     let visa = req.files["visa"]
     req.body.visa = visa[0].path
-
-    // const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG";
-    // const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84";
-    console.log(req.body);
-    const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
-    const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
-
+    const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG";
+    const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84";
     const headers = {
       "x-api-version": "2023-03-01",
       "Content-Type": "application/json",
       "X-Client-ID": clientId,
       "X-Client-Secret": clientSecret,
-    };
-
+      "x-cf-signature": 'pFT1fxWStUgM6DDw5iGnrm3JoQ5g5CaiKDCNQZFJ08jtHaSRvtuEMm41831KRFUqx+rwGSDfGVVEbMla1uknA9IXeJPDtJAR4Ja0NBMQDkP7Wr7ei/Cfc3lJn9BItHNKGovdmSl61+7ReNd7WPNPa4bpni8V/QX43VCtDX2BtNIuhZ5zDgIQlUqikyljH3r2slP1zYwr2UbugYjkX4ivqqX3Kj7ErffFqDR02LOQNp2gJlUq3dGI5L2qb+S83S5ZXgQpgZOQ1JKYcSTQs2frYlJiT71k4ThrpfhfUyg1QFn+XGyxqwIdhbqd1v6jRxmkkQGU+MxP/6RID2MCYJqeug==',
+    }
     const response = await axios.post(
-      // "https://api.cashfree.com/verification/pan",
-      "https://sandbox.cashfree.com/verification/pan",
-      { pan },
+      "https://api.cashfree.com/verification/pan",
+      newBeneficiary,
       {
         headers: headers,
       }
     );
+
+
+
+    // const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG";
+    // const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84";
+    // console.log(req.body);
+    // const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
+    // const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
+
+    // const headers = {
+    //   "x-api-version": "2023-03-01",
+    //   "Content-Type": "application/json",
+    //   "X-Client-ID": clientId,
+    //   "X-Client-Secret": clientSecret,
+    // };
+
+    // const response = await axios.post(
+    //   // "https://api.cashfree.com/verification/pan",
+    //   "https://sandbox.cashfree.com/verification/pan",
+    //   { pan },
+    //   {
+    //     headers: headers,
+    //   }
+    // );
     console.log(response);
     const createdBeneficiary = response.data;
     const updatedCurrencyConverter = await ForeignCurrency.findByIdAndUpdate({ _id: req.params.id }, { $set: { panCard: pan, panStatus: response.data.pan_status, uploadPanCard: req.body.pan, passport: req.body.passport, uploadPassport: req.body.passport1, visa: req.body.visa, ticket: req.body.ticket, }, }, { new: true });
