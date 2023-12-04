@@ -228,6 +228,8 @@ exports.updatebifurcation = async (req, res) => {
         }
       } else if (wiretravel.purposeName === "overseas tour program package") {
         tcs = ((5 / 100) * total).toFixed(2);
+      } else {
+        tcs = ((20 / 100) * total).toFixed(2);
       }
     }
     const TotalOfAllCharges = (parseFloat(remittenceServiceCharge) + parseFloat(GstOnCharge) + parseFloat(gstOnCurrencyConversion) + (tcsFlag ? parseFloat(tcs) : parseFloat(tcs))).toFixed(2);
