@@ -106,7 +106,7 @@ exports.update = async (req, res) => {
       "Content-Type": "application/json",
       "X-Client-ID": clientId,
       "X-Client-Secret": clientSecret,
-      "x-cf-signature": 'ZWTuCGYtxcuA/+jPhUOTS7XVAfWqZYcrsyytI122jrV6bC1ze5JoTwc61P91uExqpOWU8L8QhCyPdT5i8/oweKaQlQBsLvS8FM3SUCtYOjRW1x8iariSuWFOtvxui9Oi3G9kAN0Ov/TcCHP9kaEK4UD/Wfw0FxDujDNwvGt5XydD/DuKGBoC+Arnkd21ZVg5WyIwZcpWexdsl4e38YDHC+r5/7GbukepJ7CfHK3u8dYxPo0fb6UlTqaZhS32Ge4DwbgzCEV0pY+hANdpZpgwgyrUu77FX1vMD/nrLRkK0Pjva9K5NoZ/F1AzcfopFrBGSRsGw1xZOphNpiilK75bNQ==',
+      "x-cf-signature": 'La/YVfSLztWY57lteB5brZLw8iCnbh3S1u4OXWhPeLTpjnwX5XOlmvh1sLliKt8mVFPwRUgAdHZ7oVArBg4BXJNjHmIGofjKzs93nalv/dft6yyfXpXPLqpyTIsq6syxBIDKL85jK7orOP8zAH0Q9q7Ei5YCQhN7Nsud45Xgvvc3LAS9Hx05+WjAW3KBVbH1VVHbWilcbP5kzxUyaLgT78JhlL+nLaUbHXHR54ocQkcsWdeHE8SdRqIhtu92Gln6KwW8KJf36jchvHUdxAG72St7uvfZmxn0RsVkb+tpHWhCbJc3hH8bkwZru9D7RXOLLttZOQ7Y0cXzyafJPeCqXw==',
     }
     const response = await axios.post(
       "https://api.cashfree.com/verification/pan",
