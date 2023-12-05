@@ -40,12 +40,30 @@ exports.createpan = async (req, res) => {
     });
     const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG";
     const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84";
+    var crypto = require("crypto");
+    const g = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq+gwnr8tNQkISw9emQc1
+P82/OeLIZ07LE+IiLNTNDFcLDd/s80CPJ3ic4RnbliAzXibapoYWF9ogNqI09X2k
+0bh68c4704mxBv9LkXgzvtri5R249bMHr/tNqiCN4FoOzNB5xAHGE91fkw/+uy+K
+i3K9x9RzL8VatOXgKKLruSIdWRA4eIagMNN5daP1LrM1kwqsutI8TsYcle0Rh62X
+8CN4GQbS2D+py+IjjBGlxBuUb/qWQ21RaUvHh+p5V1Kjlosa2GnHpvoZzCom/XUp
+tNUoc6HTC6o+EXu0Fbc26gekivjZ0hR5aiiEy8/5w4HVB6u2GuUzPoF5jACk59bR
+3wIDAQAB
+-----END PUBLIC KEY-----`
+    var curTimeStamp = Math.round(Date.now() / 1000);
+    var message = "CF438240CIR4MSJHSPJFOOSBU9CG" + "." + curTimeStamp;
+    let buffer = Buffer.from(message);
+    let encrypted = crypto.publicEncrypt({
+      key: g,
+      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+      encoding: "utf8"
+    }, buffer);
     const headers = {
       "x-api-version": "2023-03-01",
       "Content-Type": "application/json",
       "X-Client-ID": clientId,
       "X-Client-Secret": clientSecret,
-      "x-cf-signature": 'ZWTuCGYtxcuA/+jPhUOTS7XVAfWqZYcrsyytI122jrV6bC1ze5JoTwc61P91uExqpOWU8L8QhCyPdT5i8/oweKaQlQBsLvS8FM3SUCtYOjRW1x8iariSuWFOtvxui9Oi3G9kAN0Ov/TcCHP9kaEK4UD/Wfw0FxDujDNwvGt5XydD/DuKGBoC+Arnkd21ZVg5WyIwZcpWexdsl4e38YDHC+r5/7GbukepJ7CfHK3u8dYxPo0fb6UlTqaZhS32Ge4DwbgzCEV0pY+hANdpZpgwgyrUu77FX1vMD/nrLRkK0Pjva9K5NoZ/F1AzcfopFrBGSRsGw1xZOphNpiilK75bNQ==',
+      "x-cf-signature": encrypted.toString("base64")
     }
     const response = await axios.post(
       "https://api.cashfree.com/verification/pan",

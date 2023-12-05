@@ -101,16 +101,34 @@ exports.update = async (req, res) => {
     req.body.visa = visa[0].path
     const clientId = "CF438240CIR4MSJHSPJFOOSBU9CG";
     const clientSecret = "0345902517133d3ac763c807a43ee181fa157b84";
+    var crypto = require("crypto");
+    const g = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq+gwnr8tNQkISw9emQc1
+P82/OeLIZ07LE+IiLNTNDFcLDd/s80CPJ3ic4RnbliAzXibapoYWF9ogNqI09X2k
+0bh68c4704mxBv9LkXgzvtri5R249bMHr/tNqiCN4FoOzNB5xAHGE91fkw/+uy+K
+i3K9x9RzL8VatOXgKKLruSIdWRA4eIagMNN5daP1LrM1kwqsutI8TsYcle0Rh62X
+8CN4GQbS2D+py+IjjBGlxBuUb/qWQ21RaUvHh+p5V1Kjlosa2GnHpvoZzCom/XUp
+tNUoc6HTC6o+EXu0Fbc26gekivjZ0hR5aiiEy8/5w4HVB6u2GuUzPoF5jACk59bR
+3wIDAQAB
+-----END PUBLIC KEY-----`
+    var curTimeStamp = Math.round(Date.now() / 1000);
+    var message = "CF438240CIR4MSJHSPJFOOSBU9CG" + "." + curTimeStamp;
+    let buffer = Buffer.from(message);
+    let encrypted = crypto.publicEncrypt({
+      key: g,
+      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+      encoding: "utf8"
+    }, buffer);
     const headers = {
       "x-api-version": "2023-03-01",
       "Content-Type": "application/json",
       "X-Client-ID": clientId,
       "X-Client-Secret": clientSecret,
-      "x-cf-signature": 'La/YVfSLztWY57lteB5brZLw8iCnbh3S1u4OXWhPeLTpjnwX5XOlmvh1sLliKt8mVFPwRUgAdHZ7oVArBg4BXJNjHmIGofjKzs93nalv/dft6yyfXpXPLqpyTIsq6syxBIDKL85jK7orOP8zAH0Q9q7Ei5YCQhN7Nsud45Xgvvc3LAS9Hx05+WjAW3KBVbH1VVHbWilcbP5kzxUyaLgT78JhlL+nLaUbHXHR54ocQkcsWdeHE8SdRqIhtu92Gln6KwW8KJf36jchvHUdxAG72St7uvfZmxn0RsVkb+tpHWhCbJc3hH8bkwZru9D7RXOLLttZOQ7Y0cXzyafJPeCqXw==',
+      "x-cf-signature": encrypted.toString("base64")
     }
     const response = await axios.post(
       "https://api.cashfree.com/verification/pan",
-      newBeneficiary,
+      { pan },
       {
         headers: headers,
       }
