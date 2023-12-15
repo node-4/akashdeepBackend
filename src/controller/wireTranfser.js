@@ -221,7 +221,7 @@ exports.updatebifurcation = async (req, res) => {
     }
     let tcs = 0;
     let tcsFlag = true;
-    if (total > 7000000) {
+    if (total > 700000) {
       if (wiretravel.purposeName === "education loan") {
         tcs = ((0.5 / 100) * total).toFixed(2);
         tcsFlag = false;
