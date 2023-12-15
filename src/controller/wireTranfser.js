@@ -87,8 +87,6 @@ tNUoc6HTC6o+EXu0Fbc26gekivjZ0hR5aiiEy8/5w4HVB6u2GuUzPoF5jACk59bR
         headers: headers,
       }
     );
-
-
     // const clientId = "CF370281CJOS20EHP6FSM6JOP5BG";
     // const clientSecret = "a9ce558e305335fb8eaadbb4703b6a7f8f5fd622";
     // const headers = {
@@ -223,32 +221,51 @@ exports.updatebifurcation = async (req, res) => {
     }
     let tcs = 0;
     let tcsFlag = true;
-    if (total <= 7000000) {
-      // Tax system before 1st Oct 2023
-      if (wiretravel.purposeName === "education (financed by loan)") {
-        if (total < 700000) {
-          tcs = "0";
-        } else {
-          tcsFlag = ((0.5 / 100) * total).toFixed(2);
-        }
-      } else if (wiretravel.purposeName === "education (other than financed by loan)") {
-        if (total < 700000) {
-          tcs = "0";
-        } else {
-          tcsFlag = ((5 / 100) * total).toFixed(2);
-        }
-      } else if (wiretravel.purposeName === "other purposes") {
-        if (total < 700000) {
-          tcs = "0";
-        } else {
-          tcsFlag = ((5 / 100) * total).toFixed(2);
-        }
-      } else if (wiretravel.purposeName === "overseas tour program package") {
-        tcs = ((5 / 100) * total).toFixed(2);
+    if (total > 7000000) {
+      if (wiretravel.purposeName === "education loan") {
+        tcs = ((0.5 / 100) * total).toFixed(2);
+        tcsFlag = false;
       } else {
-        tcs = ((20 / 100) * total).toFixed(2);
+        switch (wiretravel.purposeName) {
+          case "Education Abroad":
+          case "Travel For Education":
+          case "GIC payment to canada":
+          case "Travel For Medical Treatment Abroad":
+            tcs = ((5 / 100) * total).toFixed(2);
+            tcsFlag = false;
+            break;
+          default:
+            tcs = ((20 / 100) * total).toFixed(2);
+            tcsFlag = false;
+        }
       }
     }
+    // if (total <= 7000000) {
+    //   // Tax system before 1st Oct 2023
+    //   if (wiretravel.purposeName === "education (financed by loan)") {
+    //     if (total < 700000) {
+    //       tcs = "0";
+    //     } else {
+    //       tcsFlag = ((0.5 / 100) * total).toFixed(2);
+    //     }
+    //   } else if (wiretravel.purposeName === "education (other than financed by loan)") {
+    //     if (total < 700000) {
+    //       tcs = "0";
+    //     } else {
+    //       tcsFlag = ((5 / 100) * total).toFixed(2);
+    //     }
+    //   } else if (wiretravel.purposeName === "other purposes") {
+    //     if (total < 700000) {
+    //       tcs = "0";
+    //     } else {
+    //       tcsFlag = ((5 / 100) * total).toFixed(2);
+    //     }
+    //   } else if (wiretravel.purposeName === "overseas tour program package") {
+    //     tcs = ((5 / 100) * total).toFixed(2);
+    //   } else {
+    //     tcs = ((20 / 100) * total).toFixed(2);
+    //   }
+    // }
     const TotalOfAllCharges = (parseFloat(remittenceServiceCharge) + parseFloat(GstOnCharge) + parseFloat(gstOnCurrencyConversion) + (tcsFlag ? parseFloat(tcs) : parseFloat(tcs))).toFixed(2);
     const updatedCurrencyConverter = await wireTransferModel.findByIdAndUpdate({ _id: req.params.id }, { $set: { exchangeRate: exchangeRate, transferAmountInFCY: transferAmountInFCY, remittenceServiceCharge: remittenceServiceCharge, GstOnCharge: GstOnCharge, GstOnCurrencyConversion: gstOnCurrencyConversion, tcs: tcs, tcsFlag: tcsFlag, totalFundingInINR: total, TotalOfAllCharges: TotalOfAllCharges, }, }, { new: true });
     return res.status(201).json(updatedCurrencyConverter);
