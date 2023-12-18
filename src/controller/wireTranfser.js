@@ -214,10 +214,25 @@ exports.updatebifurcation = async (req, res) => {
       gstOnCurrencyConversion = "45";
     } else if (total <= 100000) {
       gstOnCurrencyConversion = ((0.18 / 100) * total).toFixed(2);
-    } else if (total <= 1000000) {
-      gstOnCurrencyConversion = (180 + (0.09 / 100) * (total - 100000)).toFixed(2);
+    } else if (100000 < total <= 1000000) {
+      let a;
+      if (100000 < total) {
+        a = ((0.18 / 100) * 100000).toFixed(2);
+      }
+      let b = (180 + (0.09 / 100) * (total - 100000)).toFixed(2);
+      gstOnCurrencyConversion = a + b;
     } else {
-      gstOnCurrencyConversion = (990 + (0.018 / 100) * (total - 1000000)).toFixed(2);
+      let a;
+      if (1000000 < total) {
+        a = (180 + (0.09 / 100) * (1000000)).toFixed(2);
+      }
+      b = (990 + (0.018 / 100) * (total - 1000000)).toFixed(2);
+      let c = a + b;
+      if (c > 10800) {
+        gstOnCurrencyConversion = 10800
+      } else {
+        gstOnCurrencyConversion = c;
+      }
     }
     let tcs = 0;
     let tcsFlag = true;
