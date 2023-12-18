@@ -220,14 +220,14 @@ exports.updatebifurcation = async (req, res) => {
         a = ((0.18 / 100) * 100000).toFixed(2);
       }
       let b = (180 + (0.09 / 100) * (total - 100000)).toFixed(2);
-      gstOnCurrencyConversion = a + b;
+      gstOnCurrencyConversion = Number(a) + Number(b);
     } else {
       let a;
       if (1000000 < total) {
         a = (180 + (0.09 / 100) * (1000000)).toFixed(2);
       }
       b = (990 + (0.018 / 100) * (total - 1000000)).toFixed(2);
-      let c = a + b;
+      let c = Number(a) + Number(b);
       if (c > 10800) {
         gstOnCurrencyConversion = 10800
       } else {
