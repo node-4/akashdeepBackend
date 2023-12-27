@@ -209,13 +209,13 @@ exports.updatebifurcation = async (req, res) => {
     }
     const GstOnCharge = (remittenceServiceCharge * 0.18).toFixed(2);
     const total = parseFloat(exchangeRate) * parseFloat(wiretravel.recievingAmount);
-    let gstOnCurrencyConversion = "";
+    let gstOnCurrencyConversion = 0;
     if (total <= 25000) {
       gstOnCurrencyConversion = "45";
     } else if (total <= 100000) {
       let a, b = 0;
       if (total <= 25000) {
-        a = "45";
+        a = 45;
       } else {
         b = ((0.18 / 100) * (total - 25000)).toFixed(2);
       }
@@ -230,7 +230,7 @@ exports.updatebifurcation = async (req, res) => {
       gstOnCurrencyConversion = Number(a) + Number(b);
     } else {
       b = (990 + (0.018 / 100) * (total - 1000000)).toFixed(2);
-      let c = /*Number(a)*/ + Number(b);
+      let c = /*Number(a)*/ Number(b);
       if (c > 10800) {
         gstOnCurrencyConversion = 10800
       } else {
@@ -258,32 +258,6 @@ exports.updatebifurcation = async (req, res) => {
         }
       }
     }
-    // if (total <= 7000000) {
-    //   // Tax system before 1st Oct 2023
-    //   if (wiretravel.purposeName === "education (financed by loan)") {
-    //     if (total < 700000) {
-    //       tcs = "0";
-    //     } else {
-    //       tcsFlag = ((0.5 / 100) * total).toFixed(2);
-    //     }
-    //   } else if (wiretravel.purposeName === "education (other than financed by loan)") {
-    //     if (total < 700000) {
-    //       tcs = "0";
-    //     } else {
-    //       tcsFlag = ((5 / 100) * total).toFixed(2);
-    //     }
-    //   } else if (wiretravel.purposeName === "other purposes") {
-    //     if (total < 700000) {
-    //       tcs = "0";
-    //     } else {
-    //       tcsFlag = ((5 / 100) * total).toFixed(2);
-    //     }
-    //   } else if (wiretravel.purposeName === "overseas tour program package") {
-    //     tcs = ((5 / 100) * total).toFixed(2);
-    //   } else {
-    //     tcs = ((20 / 100) * total).toFixed(2);
-    //   }
-    // }
     const TotalOfAllCharges = (parseFloat(remittenceServiceCharge) + parseFloat(GstOnCharge) + parseFloat(gstOnCurrencyConversion) + (tcsFlag ? parseFloat(tcs) : parseFloat(tcs))).toFixed(2);
     const updatedCurrencyConverter = await wireTransferModel.findByIdAndUpdate({ _id: req.params.id }, { $set: { exchangeRate: exchangeRate, transferAmountInFCY: transferAmountInFCY, remittenceServiceCharge: remittenceServiceCharge, GstOnCharge: GstOnCharge, GstOnCurrencyConversion: gstOnCurrencyConversion, tcs: tcs, tcsFlag: tcsFlag, totalFundingInINR: parseFloat(total) + parseFloat(TotalOfAllCharges), TotalOfAllCharges: TotalOfAllCharges, }, }, { new: true });
     return res.status(201).json(updatedCurrencyConverter);
