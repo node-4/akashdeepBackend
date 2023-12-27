@@ -282,7 +282,7 @@ exports.updatebifurcation = async (req, res) => {
     //   }
     // }
     const TotalOfAllCharges = (parseFloat(remittenceServiceCharge) + parseFloat(GstOnCharge) + parseFloat(gstOnCurrencyConversion) + (tcsFlag ? parseFloat(tcs) : parseFloat(tcs))).toFixed(2);
-    const updatedCurrencyConverter = await wireTransferModel.findByIdAndUpdate({ _id: req.params.id }, { $set: { exchangeRate: exchangeRate, transferAmountInFCY: transferAmountInFCY, remittenceServiceCharge: remittenceServiceCharge, GstOnCharge: GstOnCharge, GstOnCurrencyConversion: gstOnCurrencyConversion, tcs: tcs, tcsFlag: tcsFlag, totalFundingInINR: total, TotalOfAllCharges: TotalOfAllCharges, }, }, { new: true });
+    const updatedCurrencyConverter = await wireTransferModel.findByIdAndUpdate({ _id: req.params.id }, { $set: { exchangeRate: exchangeRate, transferAmountInFCY: transferAmountInFCY, remittenceServiceCharge: remittenceServiceCharge, GstOnCharge: GstOnCharge, GstOnCurrencyConversion: gstOnCurrencyConversion, tcs: tcs, tcsFlag: tcsFlag, totalFundingInINR: parseFloat(total) + parseFloat(TotalOfAllCharges), TotalOfAllCharges: TotalOfAllCharges, }, }, { new: true });
     return res.status(201).json(updatedCurrencyConverter);
   } catch (error) {
     console.log(error);
