@@ -208,7 +208,7 @@ exports.updatebifurcation = async (req, res) => {
       return res.status(404).send("wiretravel Card not found");
     }
     const GstOnCharge = (remittenceServiceCharge * 0.18).toFixed(2);
-    const total = parseFloat(exchangeRate) * parseFloat(transferAmountInFCY);
+    const total = parseFloat(exchangeRate) * parseFloat(wiretravel.recievingAmount);
     let gstOnCurrencyConversion = "";
     if (total <= 25000) {
       gstOnCurrencyConversion = "45";
