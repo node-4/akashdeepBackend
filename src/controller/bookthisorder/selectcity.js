@@ -19,10 +19,58 @@ exports.createCity = async (req, res) => {
     return res.status(400).json({ message: err.message });
   }
 };
-
 exports.getCity = async (req, res) => {
   try {
-    const cities = await cityModel.find();
+    if (req.query.state != (null || undefined)) {
+      const cities = await cityModel.find({ state: req.query.state, type: "city" });
+      if (!cities) {
+        return res.status(400).json({ error: "cities data not provided" });
+      }
+      return res.status(201).json({ success: true, data: cities })
+    } else {
+      const cities = await cityModel.find({ type: "city" });
+      if (!cities) {
+        return res.status(400).json({ error: "cities data not provided" });
+      }
+      return res.status(201).json({ success: true, data: cities })
+    }
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+exports.getState = async (req, res) => {
+  try {
+    if (req.query.country != (null || undefined)) {
+      const cities = await cityModel.find({ country: req.query.country, type: "state", });
+      if (!cities) {
+        return res.status(400).json({ error: "cities data not provided" });
+      }
+      return res.status(201).json({ success: true, data: cities })
+    } else {
+      const cities = await cityModel.find({ country: req.query.country, type: "state", });
+      if (!cities) {
+        return res.status(400).json({ error: "cities data not provided" });
+      }
+      return res.status(201).json({ success: true, data: cities })
+    }
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+exports.getOtherCountry = async (req, res) => {
+  try {
+    const cities = await cityModel.find({ type: "country", countryType: "other" });
+    if (!cities) {
+      return res.status(400).json({ error: "cities data not provided" });
+    }
+    return res.status(201).json({ success: true, data: cities })
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+exports.getOverseasCountry = async (req, res) => {
+  try {
+    const cities = await cityModel.find({ type: "country", countryType: "overseas" });
     if (!cities) {
       return res.status(400).json({ error: "cities data not provided" });
     }
@@ -53,7 +101,6 @@ exports.getCitybyType = async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 };
-
 exports.updateCity = async (req, res) => {
   try {
     const { id } = req.params;
@@ -64,7 +111,6 @@ exports.updateCity = async (req, res) => {
     return res.status(400).json({ message: err.message });
   }
 };
-
 exports.deleteCity = async (req, res) => {
   try {
     const { id } = req.params;

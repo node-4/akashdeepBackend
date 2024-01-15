@@ -17,6 +17,10 @@ const citySchema = mongoose.Schema({
     enum: ["city", "state", "country"],
     default: "city",
   },
+  countryType: {
+    type: String,
+    enum: ["overseas", "other"],
+  },
 });
 const cityModel = mongoose.model("city", citySchema);
 module.exports = cityModel;

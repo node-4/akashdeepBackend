@@ -9,7 +9,6 @@ exports.createCurrency = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
 exports.getCurrencies = async (req, res) => {
   try {
     const currencies = await currencyModel.find();
@@ -19,7 +18,24 @@ exports.getCurrencies = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
+exports.getOverseasCurrencies = async (req, res) => {
+  try {
+    const currencies = await currencyModel.find({ type: "overseas" });
+    res.status(200).json(currencies);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+exports.getOtherCurrencies = async (req, res) => {
+  try {
+    const currencies = await currencyModel.find({ type: "other" });
+    res.status(200).json(currencies);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 exports.updateCurrency = async (req, res) => {
   try {
     const updatedCurrency = await currencyModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -29,7 +45,6 @@ exports.updateCurrency = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
 exports.deleteCurrency = async (req, res) => {
   try {
     await currencyModel.findByIdAndDelete(req.params.id);

@@ -7,6 +7,9 @@ router.post('/cities', cityController.createCity);
 
 // READ all cities
 router.get('/cities', cityController.getCity);
+router.get('/getState', cityController.getState);
+router.get('/getOtherCountry', cityController.getOtherCountry);
+router.get('/getOverseasCountry', cityController.getOverseasCountry);
 router.get('/getCitybyType/:type', cityController.getCitybyType);
 router.get('/getCityforDelhiNcr', cityController.getCityforDelhiNcr);
 
