@@ -2,11 +2,21 @@ const cityModel = require('../../model/bookthisorder/selectcity');
 
 exports.createCity = async (req, res) => {
   try {
-    const { selectcity, type } = req.body;
-    const newCity = await cityModel.create({ selectcity, type });
-    res.status(201).json(newCity);
+    const { selectcity, type, state, country } = req.body;
+    if (type = "city") {
+      const newCity = await cityModel.create({ selectcity, type, state, country });
+      return res.status(201).json({ message: "city created", newCity });
+    }
+    if (type = "state") {
+      const newCity = await cityModel.create({ selectcity, type, country });
+      return res.status(201).json({ message: "State created", newCity });
+    }
+    if (type = "country") {
+      const newCity = await cityModel.create({ selectcity, type });
+      return res.status(201).json({ message: "City created", newCity });
+    }
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    return res.status(400).json({ message: err.message });
   }
 };
 
@@ -16,9 +26,9 @@ exports.getCity = async (req, res) => {
     if (!cities) {
       return res.status(400).json({ error: "cities data not provided" });
     }
-    res.status(201).json({ success: true, data: cities })
+    return res.status(201).json({ success: true, data: cities })
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
 };
 exports.getCityforDelhiNcr = async (req, res) => {
@@ -29,7 +39,7 @@ exports.getCityforDelhiNcr = async (req, res) => {
     }
     return res.status(201).json({ success: true, data: cities })
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
 };
 exports.getCitybyType = async (req, res) => {
@@ -38,9 +48,9 @@ exports.getCitybyType = async (req, res) => {
     if (!cities) {
       return res.status(400).json({ error: "cities data not provided" });
     }
-    res.status(201).json({ success: true, data: cities })
+    return res.status(201).json({ success: true, data: cities })
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
 };
 
@@ -49,9 +59,9 @@ exports.updateCity = async (req, res) => {
     const { id } = req.params;
     const { selectcity } = req.body;
     const updatedCity = await cityModel.findByIdAndUpdate(id, { selectcity }, { new: true });
-    res.status(201).json({ success: true, data: updatedCity })
+    return res.status(201).json({ success: true, data: updatedCity })
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    return res.status(400).json({ message: err.message });
   }
 };
 
@@ -61,6 +71,6 @@ exports.deleteCity = async (req, res) => {
     await cityModel.findByIdAndDelete(id);
     res.json({ message: 'City deleted successfully' });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
 };
