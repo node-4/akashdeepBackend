@@ -6,7 +6,7 @@ const purpose = require("../../model/purpose");
 
 exports.createPrepaidTravel = async (req, res) => {
   try {
-    data = { selectCity: req.body.selectCity, currency: req.body.currency, forexAmount: req.body.forexAmount, purpose: req.body.purpose, buy_reload_unload: "buy", };
+    let data = { selectCity: req.body.selectCity, currency: req.body.currency, forexAmount: req.body.forexAmount, purpose: req.body.purpose, buy_reload_unload: "buy", };
     const currenciesToChange = await currencyModel.findById({ _id: data.currency, });
     console.log(currenciesToChange.addcurrency);
     const cityData = await cityModel.findById({ _id: data.selectCity, });
