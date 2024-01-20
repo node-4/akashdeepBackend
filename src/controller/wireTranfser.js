@@ -268,8 +268,15 @@ exports.updatebifurcation = async (req, res) => {
 }
 exports.updateDocument = async (req, res) => {
   try {
+    let document;
+    if (req.file) {
+      document = req.file.path;
+    } else {
+      return res.status(201).json({ status: 201, message: "Please upload document" });
+    }
     let data = {
       documentName: req.body.documentName,
+      document: document,
       documentNumber: req.body.documentNumber,
       city: req.body.city,
       purposeOfIssue: req.body.purposeOfIssue,

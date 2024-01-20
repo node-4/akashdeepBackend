@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const wireTransferController = require('../controller/wireTranfser'); 
+const wireTransferController = require('../controller/wireTranfser');
 
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
@@ -23,13 +23,13 @@ router.put("/addharotp/:id", wireTransferController.addharotpWire);
 
 router.put("/verifyotp/:id", wireTransferController.verifyotpWire)
 
-router.put('/updateRemitter/:id',  wireTransferController.updateRemitter);
+router.put('/updateRemitter/:id', wireTransferController.updateRemitter);
 
 router.put('/updateBeneficiary/:id', wireTransferController.updateBeneficiary)
 
-router.put('/updatebifurcation/:id',  wireTransferController.updatebifurcation);
+router.put('/updatebifurcation/:id', wireTransferController.updatebifurcation);
 
-router.put('/updateDocument/:id',  wireTransferController.updateDocument);
+router.put('/updateDocument/:id', upload.single('document'), wireTransferController.updateDocument);
 
 // router.delete('/:id', wireTransferController.deleteTravelInsuranceById);
 

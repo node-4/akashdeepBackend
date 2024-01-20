@@ -208,6 +208,9 @@ const wireTransferSchema = mongoose.Schema({
   documentName: {
     type: String,
   },
+  document: {
+    type: String,
+  },
   documentNumber: {
     type: String,
   },
