@@ -2,9 +2,12 @@ const prepaidtravelModel = require("../../model/prepaidtravelcard/prepaidtravelc
 const axios = require("axios");
 const currencyModel = require("../../model/bookthisorder/addcurrency");
 const cityModel = require("../../model/bookthisorder/selectcity");
+const purposs = require("../../model/purpose");
 
 exports.createPrepaidTravel_reload = async (req, res) => {
   try {
+    let tcs = 0;
+    let tcsFlag = true;
     let data = { selectCity: req.body.selectCity, currency: req.body.currency, forexAmount: req.body.forexAmount, buy_reload_unload: "reload" };
     const currenciesToChange = await currencyModel.findById({ _id: data.currency, });
     console.log(currenciesToChange.addcurrency);
@@ -14,15 +17,142 @@ exports.createPrepaidTravel_reload = async (req, res) => {
     console.log(response.data.value);
     const ConvertedAmount = response.data.value;
     const total = response.data.value;
-    let obj = { buy_reload_unload: data.buy_reload_unload, selectCity: data.selectCity, city: cityData.selectcity, currency: data.currency, currencyToChange: currenciesToChange.addcurrency, forexAmount: data.forexAmount, ConvertedAmountToINR: ConvertedAmount, total: total, };
+    const purposes = await purposs.findOne({ _id: req.body.purpose, })
+    let obj = { buy_reload_unload: data.buy_reload_unload, purpose: purposes._id, purposeName: purposes.purpose, selectCity: data.selectCity, city: cityData.selectcity, currency: data.currency, currencyToChange: currenciesToChange.addcurrency, forexAmount: data.forexAmount, ConvertedAmountToINR: ConvertedAmount, total: total, };
     const prepaidtravel = new prepaidtravelModel(obj);
     const result = await prepaidtravel.save();
-    return res.status(201).json(result);
+
+    const GstOnCharge = (result.total * 0.18).toFixed(2);
+    const total1 = result.total;
+    console.log(total1);
+    let gstOnCurrencyConversion = 0;
+    if (total1 <= 25000) {
+      gstOnCurrencyConversion = "45";
+    } else if (total1 <= 100000) {
+      let a, b = 0;
+      if (total1 <= 25000) {
+        a = 45;
+      } else {
+        a = 45;
+        b = ((0.18 / 100) * (total1 - 25000)).toFixed(2);
+      }
+      let c = Number(a) + Number(b);
+      gstOnCurrencyConversion = c;
+      console.log(gstOnCurrencyConversion);
+
+    } else if (100000 < total1 <= 1000000) {
+      let a;
+      if (100000 < total1) {
+        a = ((0.18 / 100) * 100000).toFixed(2);
+      }
+      let b = ((0.09 / 100) * (total1 - 100000)).toFixed(2);
+      gstOnCurrencyConversion = Number(a) + Number(b);
+    } else {
+      b = (990 + ((0.018 / 100) * (total1 - 1000000))).toFixed(2);
+      let c = Number(b);
+      if (c > 10800) {
+        gstOnCurrencyConversion = 10800
+      } else {
+        gstOnCurrencyConversion = c;
+      }
+      if (total1 > 700000) {
+        if (result.purposeName === "education loan") {
+          tcs = ((0.5 / 100) * total1).toFixed(2);
+          tcsFlag = false;
+        } else {
+          switch (result.purposeName) {
+            case "Education Abroad":
+            case "Travel For Education":
+            case "GIC payment to canada":
+            case "Travel For Medical Treatment Abroad":
+              tcs = ((5 / 100) * total1).toFixed(2);
+              tcsFlag = false;
+              break;
+            default:
+              tcs = ((20 / 100) * total1).toFixed(2);
+              tcsFlag = false;
+          }
+        }
+      }
+    }
+    const Total1OfAllCharges = (parseFloat(total1) + parseFloat(GstOnCharge) + parseFloat(gstOnCurrencyConversion) + (tcsFlag ? parseFloat(tcs) : parseFloat(tcs))).toFixed(2);
+    const updatedCurrencyConverter = await prepaidtravelModel.findByIdAndUpdate({ _id: result._id }, { $set: { exchangeRate: result.ConvertedAmountToINR / result.total, transferAmountInFCY: result.ConvertedAmountToINR, remittenceServiceCharge: total, GstOnCharge: GstOnCharge, GstOnCurrencyConversion: gstOnCurrencyConversion, TCS: tcs, TCS_flag: tcsFlag, TotalFundingAmtInINR: Total1OfAllCharges, TotalOfAllCharges: parseFloat(GstOnCharge) + parseFloat(gstOnCurrencyConversion), }, }, { new: true });
+    return res.status(201).json(updatedCurrencyConverter);
+    // return res.status(201).json(result);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error.message });
   }
 };
+
+
+exports.updatebifurcation = async (req, res) => {
+  try {
+    const { exchangeRate, transferAmountInFCY, remittenceServiceCharge,/* totalFundingInINR,*//*  purpose,*/ } = req.body;
+    const wiretravel = await wireTransferModel.findById({ _id: req.params.id, });
+    if (!wiretravel) {
+      return res.status(404).send("wiretravel Card not found");
+    }
+    const GstOnCharge = (remittenceServiceCharge * 0.18).toFixed(2);
+    const total = parseFloat(exchangeRate) * parseFloat(wiretravel.recievingAmount);
+    let gstOnCurrencyConversion = 0;
+    if (total <= 25000) {
+      gstOnCurrencyConversion = "45";
+    } else if (total <= 100000) {
+      let a = 0, b = 0;
+      if (total <= 25000) {
+        a = 45;
+      } else {
+        b = ((0.18 / 100) * (total - 25000)).toFixed(2);
+      }
+      let c = Number(a) + Number(b);
+      gstOnCurrencyConversion = c;
+    } else if (100000 < total <= 1000000) {
+      let a;
+      if (100000 < total) {
+        a = ((0.18 / 100) * 100000).toFixed(2);
+      }
+      let b = ((0.09 / 100) * (total - 100000)).toFixed(2);
+      gstOnCurrencyConversion = Number(a) + Number(b);
+    } else {
+      b = (990 + ((0.018 / 100) * (total - 1000000))).toFixed(2);
+      let c = Number(b);
+      if (c > 10800) {
+        gstOnCurrencyConversion = 10800
+      } else {
+        gstOnCurrencyConversion = c;
+      }
+    }
+    let tcs = 0;
+    let tcsFlag = true;
+    if (total > 700000) {
+      if (wiretravel.purposeName === "education loan") {
+        tcs = ((0.5 / 100) * total).toFixed(2);
+        tcsFlag = false;
+      } else {
+        switch (wiretravel.purposeName) {
+          case "Education Abroad":
+          case "Travel For Education":
+          case "GIC payment to canada":
+          case "Travel For Medical Treatment Abroad":
+            tcs = ((5 / 100) * total).toFixed(2);
+            tcsFlag = false;
+            break;
+          default:
+            tcs = ((20 / 100) * total).toFixed(2);
+            tcsFlag = false;
+        }
+      }
+    }
+    const TotalOfAllCharges = (parseFloat(remittenceServiceCharge) + parseFloat(GstOnCharge) + parseFloat(gstOnCurrencyConversion) + (tcsFlag ? parseFloat(tcs) : parseFloat(tcs))).toFixed(2);
+    const updatedCurrencyConverter = await wireTransferModel.findByIdAndUpdate({ _id: req.params.id }, { $set: { exchangeRate: exchangeRate, transferAmountInFCY: transferAmountInFCY, remittenceServiceCharge: remittenceServiceCharge, GstOnCharge: GstOnCharge, GstOnCurrencyConversion: gstOnCurrencyConversion, tcs: tcs, tcsFlag: tcsFlag, totalFundingInINR: parseFloat(total) + parseFloat(TotalOfAllCharges), TotalOfAllCharges: TotalOfAllCharges, }, }, { new: true });
+    return res.status(201).json(updatedCurrencyConverter);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
+
 exports.findAllPrepaidcard_reload = async (req, res) => {
   try {
     const currencies = await prepaidtravelModel.find();
