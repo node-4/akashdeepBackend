@@ -48,17 +48,17 @@ exports.getPrepaidTravelById_reload = async (req, res) => {
 };
 exports.updatePrepaidTravelById_reload = async (req, res) => {
   try {
-    console.log("hi");
-    let panCard = req.files["pan"];
-    let passportF = req.files["passportFront"];
-    let passportB = req.files["passportBack"];
-    let airtic = req.files["air"];
-    let Valid = req.files["Visa"];
-    req.body.uploadPanCard = panCard[0].path;
-    req.body.PassportFront = passportF[0].path;
-    req.body.PassportBack = passportB[0].path;
-    req.body.airTicket = airtic[0].path;
-    req.body.validVisa = Valid[0].path;
+    // console.log("hi");
+    // let panCard = req.files["pan"];
+    // let passportF = req.files["passportFront"];
+    // let passportB = req.files["passportBack"];
+    // let airtic = req.files["air"];
+    // let Valid = req.files["Visa"];
+    // req.body.uploadPanCard = panCard[0].path;
+    // req.body.PassportFront = passportF[0].path;
+    // req.body.PassportBack = passportB[0].path;
+    // req.body.airTicket = airtic[0].path;
+    // req.body.validVisa = Valid[0].path;
     const upda = await prepaidtravelModel.findByIdAndUpdate({ _id: req.params.id }, { $set: { uploadPanCard: req.body.uploadPanCard, PassportFront: req.body.PassportFront, PassportBack: req.body.PassportBack, airTicket: req.body.airTicket, validVisa: req.body.validVisa, }, }, { new: true });
     if (!upda) {
       return res.status(404).json({ message: "travel card  not found" });
@@ -107,5 +107,20 @@ exports.deletePrepaidTravelById_reload = async (req, res) => {
   } catch (err) {
     console.error(err);
     return res.status(500).send("Internal Server Error");
+  }
+};
+exports.uploadImage = async (req, res) => {
+  try {
+
+    let image;
+    if (req.file) {
+      image = req.file.path
+      return res.status(200).json({ status: 200, message: "image", data: image });
+    } else {
+      return res.status(404).json({ status: 404, message: "image not select", data: {} });
+    }
+
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
 };

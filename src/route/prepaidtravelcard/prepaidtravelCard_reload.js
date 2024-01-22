@@ -15,8 +15,9 @@ var cpUpload = upload.fields([{name: 'pan', maxCount: 1},{ name: 'passportFront'
 router.post("/", prepaidtravelController.createPrepaidTravel_reload);
 router.get("/", prepaidtravelController.findAllPrepaidcard_reload);
 router.get("/:id", prepaidtravelController.getPrepaidTravelById_reload);
-router.put('/:id', cpUpload,prepaidtravelController.updatePrepaidTravelById_reload);
+router.put('/:id', prepaidtravelController.updatePrepaidTravelById_reload);
 router.put('/PrepaidAccount/:id', prepaidtravelController.updatePrepaidAccountDetails_reload);
 router.delete("/:id", prepaidtravelController.deletePrepaidTravelById_reload);
+router.post('/uploadImage', upload.single('image'),prepaidtravelController.uploadImage);
 
 module.exports = router;
